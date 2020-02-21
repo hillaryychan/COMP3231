@@ -151,19 +151,67 @@ Here is a list of items we would need to track when separating execution from th
 
 ![items per process and thread](imgs/2-23_execution-and-environment-items.png)
 
-A **single-threaded model** would require each step to be executed in order, which results in blocked operations and delays for all other steps that can be run independently
+Using an analogy to a Hamburger restaurant, we can visually represent the different types of thread models we can have:
 
-a single thread keeps track of what it is doing locally without worrying about what is happening outside it. Helps with scalability
-
-There is an alternaitve which is Finite-State Machine Model (or **Event-based Model**, which still give throughput
-
-Thread models do not have "explicit book-keeping" of its events
+![thread modesl](imgs/2-25_thread-models.jpg)
 
 | Model                     | Characteristics                                       |
 | ---                       | ---                                                   |
 | Single-threaded process   | No parallelism, blocking system calls                 |
-| Threads                   | Parallelism, blocking system calls                    |
+| Multi-threaded process    | Parallelism, blocking system calls                    |
 | Finite-state machines     | Parallelism, non-blocking system calls, interrupts    |
+
+We define
+
+- a event or request to be **blocking** when other actions **cannot** be performed while we wait for the result. This means we always get a result, but we will have to wait for it
+- a event or request to be **non-blocking** when other actions **can** be performed while we wait for a result. The request will return immediately without the result but we are able to continue execution of other actions. When the result is ready, the program will be _notified_ and can return to completing actions related to the request originally made
+
+In the thread model, each thread has its own stack.
+
+![thread stack](imgs/2-30_thread-stack.png)
+
+Local variables are **per thread** and they are allocated on the stack.  
+Global variables are **shared between all threads** and are allocated in the data section. Uncoordinated access to global variables can "corrupt" the intended value in the variable resulting in concurrency control issues.  
+Dynamically allocated memory can be **global or local** depending on the pointer pointing to the memory; global pointers means the memory is global, local pointers means memory is local
+
+#### Multi-thread Model vs. Finite State (Event) Model
+
+Both models allow parallelism. However, in the thread model, the program state is stored implicitly in the stack. All threads execute are aware only of their own state and do not care about what is happing outside of it. In the Event model, the state is explicitly managed by the program, meaning it has some book-keeping on event happening in the program.
+
+![computation state](imgs/2-29_computation-state.png)
+
+Why threads?
+
+We use threads because:
+
+- they are **simpler** to program than a state machine
+- **less resources** are associated with them than a complete process; it is cheap to create and destroy and they share resources (especially memory) between each other
+- **performance** - threads waiting for I/O can be overlapped with computing threads. Note that if all threads are _compute bound_, then there is no performance improvement (on a uniprocessor)
+- take advantage of **parallelism** available on machines with more than one CPU (multiprocessor)
+
+#### Thread Usage
+
+![thread usage](imgs/2-32_thread-usage.jpg)
+
+Here is a rough outline of code for the multi-threaded web server
+
+``` C
+// dispatcher thread
+while (TRUE) {
+    get_next_request(&buf);
+    handoff_work(&buf);
+}
+
+
+// worker thread - can overlap disk I/O with execution of other threads
+while (TRUE) {
+    wait_for_work(&buf);
+    look_for_page_in_cache(&buf, &page);
+    if (page_not_in_cache(&page))
+        read_page_from_disk(&buf, &page);
+    return_page(&page);
+}
+```
 
 ## Concurrency and Deadlock
 
