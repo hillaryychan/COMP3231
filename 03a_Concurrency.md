@@ -165,18 +165,18 @@ Our first proposed solution uses a locking primitive based on a test-and-set to 
 int count = 0;
 #define N 4     // bufsize
 
-prod() {                        con(){
-    while (TRUE) {                  while (TRUE) {
-        item = produce();               if (count == 0)
-        if (count == N)                     sleep();
-            sleep();                    acquire_lock();
-        acquire_lock();                 remove_item();
-        insert_item();                  count--;
-        count++;                        release_lock();
-        release_lock();                 if (count == N-1)
-        if (count == 1)                     wakeup(prod);
-            wakeup(con);            }
-    }                           }
+prod() {                                con(){
+    while (TRUE) {                          while (TRUE) {
+        item = produce();                       if (count == 0)
+        if (count == N)                             sleep();
+            sleep();                            acquire_lock();
+        acquire_lock();                         remove_item();
+        insert_item();                          count--;
+        count++;                                release_lock();
+        release_lock();                         if (count == N-1)
+        if (count == 1)                             wakeup(prod);
+            wakeup(con);                    }
+    }                                   }
 }
 ```
 
@@ -185,10 +185,10 @@ However this has a problematic execution sequence, where `con` may detect `count
 Our problem here is that the test for some condition and actually going to sleep is not atomic. If we try the following:
 
 ``` C
-// producer         // consumer
-if (count == N)     if (count == 0)
-    sleep();            sleep();
-release_lock();     release_lock();
+// producer             // consumer
+if (count == N)         if (count == 0)
+    sleep();                sleep();
+release_lock();         release_lock();
 
 // The lock is held while asleep, so the count will never change
 ```
@@ -272,7 +272,7 @@ signal(mutex);      // exit critical region
 
 Notice how the initial count determines how many waits can progress before blocking and requiring a signal.
 
-#### Solving the Produce-Cconsumer Problem
+#### Solving the Producer-Consumer Problem
 
 ```C
 #define N 4     // bufsize
@@ -281,15 +281,15 @@ semaphore mutex = 1;    // lock for critical regions
 semaphore empty = N;    // #empty slots
 semaphore full = 0;     // #full slots
 
-prod() {                        con(){
-    while (TRUE) {                  while (TRUE) {
-        item = produce();               wait(full);
-        wait(empty);                    wait(mutex;
-        wait(mutex);                    remove_item();
-        insert_item();                  signal(mutex);
-        signal(mutex);                  signal(empty);
-        signal(full);               }
-    }                           }
+prod() {                                con(){
+    while (TRUE) {                          while (TRUE) {
+        item = produce();                       wait(full);
+        wait(empty);                            wait(mutex;
+        wait(mutex);                            remove_item();
+        insert_item();                          signal(mutex);
+        signal(mutex);                          signal(empty);
+        signal(full);                       }
+    }                                   }
 }
 ```
 
