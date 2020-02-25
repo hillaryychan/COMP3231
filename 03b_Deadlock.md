@@ -18,7 +18,7 @@ If the request is denied, the process must wait. As a result the requesting proc
 
 We have two segments of code:
 
-```
+``` C
 // segment 1
 semaphore res_1, res_2;
 void proc_A() {                     void prov_B() {
