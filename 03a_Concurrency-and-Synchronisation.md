@@ -1,4 +1,4 @@
-# Concurrency
+# Concurrency and Synchronisation
 
 Consider the following example:
 
@@ -295,6 +295,82 @@ prod() {                                con(){
 
 ## Monitors
 
+To ease concurrent programming, Hoare (1974) proposed **monitors**. Monitors are a higher level synchronisation primitive and a programming language construct.
+
+The idea is that a set of procedures, variables and data types are group in a special kind of module called a **monitor**. These variables and data types are only accessed from within the monitor. Only one process/thread can be in the monitor at any one time.  
+Mutual exclusion is implemented by the compiler, which should be less error prone.
+
+When a thread calls a monitor procedure, which already has a thread inside, it queues and it sleeps until the current thread exits the monitor.
+
+![Monitor](imgs/3-44_monitors.png)
+
+Examples of monitors:
+
+```
+monitor example {
+    int count;;
+    procedure inc() {
+        count++;
+    }
+    procedure dec() {
+        count--;
+    }
+}
+```
+
+### Condition Variables
+
+**Condition variables** are a mechanism to block when waiting for an in additon to ensuring mutual exclusion. e.g. for the producer-consumer problem when the buffer is empty or full.
+
+To allow a process to wait within the monitor, a **condition variable** must be declared as: `condition x,y;`.  
+Condition variables can only be used with the operations `wait` and `signal`.  
+`x.wait()` means that the process invoking this operation is suspended until another process invokes. Another thread can enter the monitory while the original is suspended.  
+`x.signal()` resumes exactly **one** suspended process. If no process is suspended, then the `signal` operation has no effect.
+
+![Conditon variables in monitors](imgs/3-49_condition-var.png)
+
+Solution to producer-consumer problem using monitors and condition variables:
+```
+monitor ProducerConsumer
+    condition full, empty;
+    integer count;
+
+    procedure insert(item: integer);
+    begin
+        if count = N then wait(full);
+        inser_item(item)
+        count := count + 1;
+        if count = 1 then signal(empty);
+    end
+    
+    procedure remove: integer;
+    begin
+        if count = 0 then wait(empty);
+        inser_item(item)
+        count := count - 1;
+        if count = N-1 then signal(full);
+    end;
+end monitor;
+
+procedure producer;
+begin
+    while true do
+    begin
+        item = produce_item;
+        ProducerConsumer.insert(item);
+    end;
+end;
+
+procedure consumer;
+begin
+    while true do
+    begin
+        item = ProducerConsumer.remove();
+        consume_item(item);
+    end;
+end;
+```
+
 ## OS/161 Provided Synchronisation Primitives
 
 ### Locks
@@ -385,15 +461,15 @@ struct cv *cv_create(const char*name);
 void cv_destroy(struct cv *);
 
 void cv_wait(struct cv *cv, struct lock *lock);
-// Release the lock and blocks (puts current thread to sleep)
+// Release the lock and blocks (i.e. puts current thread to sleep)
 // Upon resumption, it re-acquires the lock.
-// Note we must recheck the condition we slept on
+// Note: we must recheck the condition we slept on
 
 void cv_signal(struct cv *cv, struct lock *lock);
 // Wakes one thread, but does not release the lock
 void cv_broadcast(struct cv *cv, struct lock *lock);
-// Wakes up all threads, but does not realease the lock
-// The wirst "waiter" scheduled after signaller releases the lock will acquire the lock
+// Wakes up all threads, but does not release the lock
+// The first "waiter" scheduled after signaller releases the lock will acquire the lock
 
 // Notes: all three variants must hold the lock passed in
 ```
@@ -436,4 +512,97 @@ prod() {                            con() {
         lock_release(1);                    consume(item);
     }                                   }
 }                                   }
+```
+
+## More Concurrency and Synchronisation Problems
+
+### Dining Philosophers
+
+Scenario: philosophers eat and think. When they eat they need 2 forks, but they can only pick up one fork at a time. If all philosophers pick up the fork on their right-hand side, they will be caught in a deadlock and starve to death. 
+
+How do we prevent the deadlock?
+
+One solution could be to make it so that only one philosopher on the table can be eating at any time, but this is inefficient if there are lots of philosophers.
+
+Another solution is using semaphores
+
+``` C
+#define N           5           // # of philosophers
+#define LEFT        (i+N-1)%N   // # of i's left neighbour
+#define RIGHT       (i+1)%N     // # of i's right neighbour
+#define THINKING    0           // philosopher is thinking
+#define HUNGRY      1           // philosopher is hungry
+#define EATING      2           // philosopher is eating
+
+typdef int semaphore;           // semaphores are a special kind of int
+int state[N];                   // array to keep track of everyone's state
+semaphore mutex = 1;            // mutual exclusion for critical regions
+semaphore s[N]                  // one semaphore per philosopher
+
+
+void philosopher(int i) {       // i is the philosopher number from 0 to N-1
+    while (TRUE) {              // repeat forever
+        think();                // philospher is thinking
+        take_forks(i);          // acquire two forks and block
+        eat();                  // yum-yum, spaghetti
+        put_forks(i);           // put both forks back on the table
+    }
+}
+
+void take_forks(int i) {        // i is the philosopher number from 0 to N-1
+    down(&mutex);               // enter critical region
+    state[i] = HUNGRY;          // record fact that philosopher is hungry
+    test(i);                    // try to acquire two forks
+    up(&mutex);                 // exit critical regioin
+    down(&s[i]);                // block if forks not acquired
+}
+
+void put_forks(int i) {         // i is the philosopher number from 0 to N-1
+    down(&mutex);               // enter critical region
+    state[i] = THINKING;        // philosopher has finished eating
+    test(LEFT);                 // see if left neighbour can eat now
+    test(RIGHT);                // see if right neighbour can eat now
+    up(&mutex);                 // exit critical region
+}
+
+void test(int i) {              // i is the philosopher number from 0 to N-1
+    if (state[i] == HUNGRY && state[LEFT] != EATING && state[RIGHT] != EATING) {
+        state[i] = EATING;
+        up(&s[i]);
+    }
+}
+```
+
+### The Readers and Writers Problem
+
+This models access to a database such as a airline reservation system. It can have more than one concurrent reader, but writers must have exclusive access.
+
+Solution:
+``` C
+typedef int semaphore;
+semaphore mutex = 1;            // controls access to 'rc'
+semaphore db = 1;               // controls access to the database
+int rc = 0;                     // # of processes reading or waiting to
+
+void reader(void){
+    while (TRUE) {              // repeat forever
+        down(&mutex);           // get exclusive access to rc
+        rc++;                   // one reader more now
+        if (rc == 1) down(&db); // if this is the first reader...
+        up(&mutex);             // release exclusive access to rc
+        rc--;                   // one reader fewer now
+        if (rc == 0) up(&db);   // if was the last reader
+        up(&mutex);             // release exclusions access to rc
+        use_data_read();        // non-critical region
+    }
+}
+
+void writer(void){
+    while (TRUE) {              // repeat forever
+        think_up_data();        // non-critical region
+        down(&db);              // get exclusive access
+        write_data_base();      // update the data
+        up(&db);                // release exclusive acces
+    }
+}
 ```
