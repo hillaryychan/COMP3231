@@ -524,7 +524,7 @@ How do we prevent the deadlock?
 
 One solution could be to make it so that only one philosopher on the table can be eating at any time, but this is inefficient if there are lots of philosophers.
 
-Another solution is using semaphores
+Another solution is using semaphores:
 
 ``` C
 #define N           5           // # of philosophers
@@ -578,31 +578,32 @@ void test(int i) {              // i is the philosopher number from 0 to N-1
 This models access to a database such as a airline reservation system. It can have more than one concurrent reader, but writers must have exclusive access.
 
 Solution:
+
 ``` C
 typedef int semaphore;
-semaphore mutex = 1;            // controls access to 'rc'
-semaphore db = 1;               // controls access to the database
-int rc = 0;                     // # of processes reading or waiting to
+semaphore mutex = 1;                // controls access to 'rc'
+semaphore db = 1;                   // controls access to the database
+int rc = 0;                         // # of processes reading or waiting to
 
 void reader(void){
-    while (TRUE) {              // repeat forever
-        down(&mutex);           // get exclusive access to rc
-        rc++;                   // one reader more now
-        if (rc == 1) down(&db); // if this is the first reader...
-        up(&mutex);             // release exclusive access to rc
-        rc--;                   // one reader fewer now
-        if (rc == 0) up(&db);   // if was the last reader
-        up(&mutex);             // release exclusions access to rc
-        use_data_read();        // non-critical region
+    while (TRUE) {                  // repeat forever
+        down(&mutex);               // get exclusive access to rc
+        rc++;                       // one reader more now
+        if (rc == 1) down(&db);     // if this is the first reader...
+        up(&mutex);                 // release exclusive access to rc
+        rc--;                       // one reader fewer now
+        if (rc == 0) up(&db);       // if was the last reader
+        up(&mutex);                 // release exclusions access to rc
+        use_data_read();            // non-critical region
     }
 }
 
 void writer(void){
-    while (TRUE) {              // repeat forever
-        think_up_data();        // non-critical region
-        down(&db);              // get exclusive access
-        write_data_base();      // update the data
-        up(&db);                // release exclusive acces
+    while (TRUE) {                  // repeat forever
+        think_up_data();            // non-critical region
+        down(&db);                  // get exclusive access
+        write_data_base();          // update the data
+        up(&db);                    // release exclusive acces
     }
 }
 ```
