@@ -1,3 +1,6 @@
+Tutor: kevin luong
+Email: kevin.luong@student.unsw.edu.au
+
 Tutorial Week 2
 
 Questions
@@ -5,46 +8,60 @@ Questions
 Operating Systems Intro
 
 1. What are some of the differences between a processor running in privileged mode (also called kernel mode) and user mode? Why are the two modes needed?
+kernel: access to more instructions, not restricted to anything, can't syscall
+user: can syscall
+modes are needed see q2
 
 2. What are the two main roles of an Operating System?
-    1. Distribute resources amongst processes
-    2. Provide abstraction to hardware; hide details of hardware so that applications have a common interface with it
+1. Distribute resources amongst processes
+2. Provide abstraction to hardware; hide details of hardware so that applications have a common interface with it; don't need to worry about i/o or anything a syscall can do
+
+security
 
 3. Given a high-level understanding of file systems, explain how a file system fulfills the two roles of an operating system?
+"there is a computer inside your hard drive"
+abstracts the implementation of storage
+resource management 
 
 4. Which of the following instructions (or instruction sequences) should only be allowed in kernel mode?
-      x Disable all interrupts.
-        Read the time of day clock.
-        Set the time of day clock.
-      x Change the memory map.
-      x Write to the hard disk controller register.
-      ? Trigger the write of all buffered blocks associated with a file back to disk (fsync). 
+o Disable all interrupts.
+x Read the time of day clock.
+o Set the time of day clock.
+o Change the memory map.
+o Write to the hard disk controller register.
+x Trigger the write of all buffered blocks associated with a file back to disk (fsync).
 
 OS system call interface
 
 5. The following code contains the use of typical UNIX process management system calls: fork(), execl(), exit() and getpid(). If you are unfamiliar with their function, browse the man pages on a UNIX/Linux machine get an overview, e.g: man fork
+fork - clones process
+execl - replace current process with a new one
+exit - exit with specified code
+getpid - get process id of current process
 
 Answer the following questions about the code below.
     a. What is the value of i in the parent and child after fork.
-        in parent: child's pid
-        in child: 0
+    i = 1
 
     b. What is the value of my_pid in a parent after a child updates it?
-        
+    the parent process id does not change
+    childs process id changes when they call getpid()
 
     c. What is the process id of /bin/echo?
+    is just a file not a process
 
     d. Why is the code after execl not expected to be reached in the normal case?
+    exec replaces the process image with anew one and you never run anymore lines of code
 
     e. How many times is Hello World printed when FORK_DEPTH is 3?
-        4 times
+    4 times
 
     f. How many processes are created when running the code (including the first process)?
-        8 processes;
-            |
-        i=1 |               |
-        i=2 |       |       |       |
-        i=3 |   |   |   |   |   |   |   |
+    8 processes;
+        |
+    i=1 |               |
+    i=2 |       |       |       |
+    i=3 |   |   |   |   |   |   |   |
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -91,8 +108,18 @@ main()
       
 6.
     a. What does the following code do?
+    create file named testfile
+    if it fails, exit
+    count length of test string
+    write test string "The quick brown fox jumps over the lazy dog.\n" to testfile
+    if fail to write exit
+    close
+
     b. In addition to O_WRONLY, what are the other 2 ways one can open a file?
+    O_RDONLY, O_RDWR
+
     c. What open return in fd, what is it used for? Consider success and failure in your answer.
+    returns file descriptor greater than zero for opened file. if failed returns negative number
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -110,7 +137,7 @@ main()
   ssize_t r;
 
 
-  fd = open("testfile", O_WRONLY | O_CREAT, 0600);
+  fd = open("testfile", O_WRONLY | O_CREAT, 0600); // filename, open mode, permissions to open with
   if (fd < 0) {
     /* just ungracefully bail out */
     perror("File open failed");
@@ -131,12 +158,17 @@ main()
   close(fd);
 
 }
-       
+
 
 7. The following code is a variation of the previous code that writes twice.
     a. How big is the file (in bytes) after the two writes?
+    50 bytes
+
     b. What is lseek() doing that is affecting the final file size?
+    moves position in file to specified loc, moves 5 char from beginning of file
+
     c. What over options are there in addition to SEEK_SET?.
+    SEEK_CUR, SEEK_END
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -194,13 +226,25 @@ main()
 
 8. Compile either of the previous two code fragments on a UNIX/Linux machine and run strace ./a.out and observe the output.
     a. What is strace doing?
+    shows syscalls called by program
+
     b. Without modifying the above code to print fd, what is the value of the file descriptor used to write to the open file?
+    3
+    usually 0,1,2 are stdin, stdout, stderr
+
     c. printf does not appear in the system call trace. What is appearing in it's place? What's happening here?
+    write() is called
+    printf is a wrapper to write. writes to file descriptor for stdout
 
 9. Compile and run the following code.
     a. What do the following code do?
+    change dir to parent directory then calls ls.
+
     b. After the program runs, the current working directory of the shell is the same. Why?
+    when you run a program in the shell it forks the program then execs
+
     c. In what directory does /bin/ls run in? Why?
+    runs in parent directory when chdir('..') is called
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -216,29 +260,45 @@ main()
     exit(1);
   }
   
-  r = execl("/bin/ls","/bin/ls",NULL);
+  r = execl("/bin/ls","/bin/ls",NULL);  / arg to run, args, null terminate
   perror("Double eek!");
 }
-       
+
 
 10. On UNIX, which of the following are considered system calls? Why?
-    a. read()
-    b. printf()
-    c. memcpy()
-    d. open()
-    e. strncpy() 
+    a. read()       syscall
+    b. printf()     not syscall
+    c. memcpy()     not syscall
+    d. open()       syscall
+    e. strncpy()    not syscall
 
 Processes and Threads
 11. In the three-state process model, what do each of the three states signify? What transitions are possible between each of the states, and what causes a process (or thread) to undertake such a transition?
+running
+ready
+blocked
+
+running -> ready when scheduler decides to interrupt or time slice reached
+running -> block when waiting for resource
+ready-> running when scheduler decides to run
+block -> ready when finished waiting for resource
+
 
 12. Given N threads in a uniprocessor system. How many threads can be running at the same point in time? How many threads can be ready at the same time? How many threads can be blocked at the same time?
+1 thread can be running. its a uniprocessor
+N-1 threads can be ready
+N threads can be blocked
 
 13. Compare reading a file using a single-threaded file server and a multithreaded file server. Within the file server, it takes 15 msec to get a request for work and do all the necessary processing, assuming the required block is in the main memory disk block cache. A disk operation is required for one third of the requests, which takes an additional 75 msec during which the thread sleeps. How many requests/sec can a server handled if it is single threaded? If it is multithreaded?
+singlethread: 25 requests per second
+multithread: '66 requests per second
 
 Critical sections
 14. The following fragment of code is a single line of code. How might a race condition occur if it is executed concurrently by multiple threads? Can you give an example of how an incorrect result can be computed for x.
 
 x = x + 1;
+
+all threads try to access the variable; read and write to it
 
 15. The following function is called by multiple threads (potentially concurrently) in a multi-threaded program. Identify the critical section(s) that require(s) mutual exclusion. Describe the race condition or why no race condition exists.
 
@@ -255,7 +315,9 @@ void foo()
 
     /* more random stuff */
 }
-  
+
+j is not global cause threads have their own stack frame
+
 
 16. The following function is called by threads in a multi-thread program. Under what conditions would it form a critical section.
 
@@ -264,6 +326,6 @@ void inc_mem(int *iptr)
     *iptr = *iptr + 1;
 }
 
-    form a critical section when the pointer is a global pointer
+Form a critical section when the pointer is a global pointer. If it is a local pointer it is not.
 
 Page last modified: 4:37pm on Thursday, 20th of February, 2020
