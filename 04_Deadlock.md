@@ -55,9 +55,10 @@ There are four conditions for deadlock:
 
 ## Deadlock Modelling
 
-We can model deadlock using directed graphs:  
-circles represent processes  
-squares represent resources
+We can model deadlock using directed graphs:
+
+* circles represent processes
+* squares represent resources
 
 ![Deadlock modelling](imgs/4-9_deadlock-modelling.png)
 
@@ -121,7 +122,7 @@ This is not a viable option. If a process was allocated a printer and halfway th
 
 In this, we numerically order resources so that they must be accessed in a specific order. If a resource is not available, the process will simply have to wait.
 
-![Resource ordering](imgs/4-22_resource-ordering.png')
+![Resource ordering](imgs/4-22_resource-ordering.png)
 
 ### Approach 3: Detection and Recovery
 
