@@ -124,6 +124,15 @@ In this, we numerically order resources so that they must be accessed in a speci
 
 ![Resource ordering](imgs/4-22_resource-ordering.png)
 
+#### Summary
+
+| Condition         | Approach                      |
+| ---               | ---                           |
+| mutual exclusion  | not feasible                  |
+| hold and wait     | request resources initially   |
+| no pre-emption    | take resources away           |
+| circular wait     | order resources               |
+
 ### Approach 3: Detection and Recovery
 
 For this, we need a method to determine if a system is deadlocked. Assuming the deadlock is detected, we need a method of recovery to restore the progress of the system.
