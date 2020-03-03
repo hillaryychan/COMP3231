@@ -29,7 +29,7 @@ This is known as a **race condition**.
 
 Concurrency can occur in a multiple processes with a single thread or in a single process with multiple threads.
 
-![Where is concurrency](imgs/3-5_where-is-concurrency.png)
+![Where is concurrency](imgs/3-5_thread-model.png)
 
 There is in-kernel concurrency even for single threaded processes because there are global variables and resources in the OS that can be manipulated by processes through system calls.
 
