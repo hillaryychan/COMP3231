@@ -14,7 +14,7 @@ Arithmetic and logical operations are register-to-register operations. There are
 
 Examples:
 
-``` mips
+``` assembly
 add r3, r2, r1  # r3 = r2 + r1
 
 # other instructions
@@ -31,14 +31,14 @@ All instructions are encoded in 32-bit. Some instructions have _immediate_ opera
 
 Examples:
 
-``` mips
+``` assembly
 addi r2, r1, 2048   # r2 = r1 +2-48
 li   r2, 1234       # r2 = 1234
 ```
 
 Examples: `a = a + 1` in MIPS
 
-``` mips
+``` assembly
 lw  r4, 32(r29)     # r29 = stack pointer, store value of a in r4
 li  r5, 1
 add r4, r4, r5      # r4 = r4 + 1
@@ -59,7 +59,7 @@ User-mode accessible registers:
 
 Branching and jumping have **branch delay slot**. The instruction following a branch or jump is **always executed prior**  to the destination.
 
-``` mips
+``` assembly
     li  r2, 1       # r2 = 1
     sw  r0, (r3)    # r3 = 0
     j   1f          # execute next instruction, then jump to 1:
@@ -219,8 +219,8 @@ Threads are implemented by the kernel so
 
 A skeleton of what the lowest level of an operating system does when an interrupt occurs; i.e a **context switch**
 
-1. Hardware stacks program counter etc.
-2. Hardware loads new program counter from interrupt vector
+1. Hardware stacks program counter etc. onto the kernel stack
+2. Hardware loads new program counter from interrupt vector of where we will transition to
 3. Assembly language procedure saves registers
 4. Assembly language procedure sets up new stack
 5. C interrupt service runs (typically read and buffers input)
@@ -235,7 +235,7 @@ A **context switch** can refer to:
 
 A switch between process/threads can happen any time an OS is invoked on:
 
-* a system call - mandatory if the system call blocks or is on `exit()`
+* a system call - mandatory if the system call blocks or on `exit()`
 * a exception - mandatory if the offender is killed
 * an interrupt - triggering a dispatch is the main purpose of the _timer_ interrupt
 
@@ -257,3 +257,92 @@ Assuming we have kernel-level threads, we will go through an example of a contex
 ![context-switch](imgs/5-48_context-switch.jpg)
 
 ### Thread Switching in OS/161
+
+The **very basic** idea behind the thread switch
+
+``` C
+// file: switchframe.c
+// Note: lots of code removed - only basics 
+// of picking the next thread and running it reamin
+
+static
+void
+thread_switch(threadstate_t newstate, struct wchan *wc, struct spinlock *lk)
+{
+    struct thread *cur, *next;
+
+    cur = curthread;
+    do {
+        next = threadlist_remhead(&curcpu->c_runqueue);
+        if (next == NULL) {
+            cpu_idel();
+        }
+    } while (next == NULL);
+
+    /* do the switch (in assembler switch.S) */
+    switchframe_switch(&cur->t_context, &next->t_context);
+}
+```
+
+``` assembly
+# file: switch.S
+
+switchframe_switch:
+   /*
+    * a0 contains the address of the switchframe pointer in the old thread.
+    * a1 contains the address of the switchframe pointer in the new thread.
+    *
+    * The switchframe pointer is really the stack pointer. The other
+    * registers get saved on the stack, namely:
+    *
+    *      s0-s6, s8
+    *      gp, ra
+    *
+    * The order must match <mips/switchframe.h>.
+    *
+    * Note that while we'd ordinarily need to save s7 too, because we
+    * use it to hold curthread saving it would interfere with the way
+    * curthread is managed by thread.c. So we'll just let thread.c
+    * manage it.
+    */
+
+   /* Allocate stack space for saving 10 registers. 10*4 = 40 */
+   addi sp, sp, -40
+
+   /* Save the registers */
+   sw   ra, 36(sp)
+   sw   gp, 32(sp)
+   sw   s8, 28(sp)
+   sw   s6, 24(sp)
+   sw   s5, 20(sp)
+   sw   s4, 16(sp)
+   sw   s3, 12(sp)
+   sw   s2, 8(sp)
+   sw   s1, 4(sp)
+   sw   s0, 0(sp)
+
+   /* Store the old stack pointer in the old thread */
+   sw   sp, 0(a0)
+
+   /* Get the new stack pointer from the new thread */
+   lw   sp, 0(a1)
+   nop           /* delay slot for load */
+
+   /* Now, restore the registers */
+   lw   s0, 0(sp)
+   lw   s1, 4(sp)
+   lw   s2, 8(sp)
+   lw   s3, 12(sp)
+   lw   s4, 16(sp)
+   lw   s5, 20(sp)
+   lw   s6, 24(sp)
+   lw   s8, 28(sp)
+   lw   gp, 32(sp)
+   lw   ra, 36(sp)
+   nop                  /* delay slot for load */
+
+   /* and return. */
+   j ra
+   addi sp, sp, 40      /* in delay slot */
+   .end switchframe_switch
+```
