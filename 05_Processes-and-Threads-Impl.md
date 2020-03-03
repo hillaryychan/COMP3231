@@ -215,4 +215,45 @@ Threads are implemented by the kernel so
 
 * thread creation and destruction, blocking and unblocking threads requires kernel entry and exit, which is more expensive than the user-level equivalent
 
-## Multi-programming Implementation
+## Multi-programming Implementation/Context Switching
+
+A skeleton of what the lowest level of an operating system does when an interrupt occurs; i.e a **context switch**
+
+1. Hardware stacks program counter etc.
+2. Hardware loads new program counter from interrupt vector
+3. Assembly language procedure saves registers
+4. Assembly language procedure sets up new stack
+5. C interrupt service runs (typically read and buffers input)
+6. Scheduler decides which process is to run next
+7. C procedure returns to the assembly code
+8. Assembly language procedure starts up new current process
+
+A **context switch** can refer to:
+
+* a switch between threads involving saving and restoring a state associated with a thread
+* a switch between processes involving the above plus extra states associated with a process (e.g. memory maps)
+
+A switch between process/threads can happen any time an OS is invoked on:
+
+* a system call - mandatory if the system call blocks or is on `exit()`
+* a exception - mandatory if the offender is killed
+* an interrupt - triggering a dispatch is the main purpose of the _timer_ interrupt
+
+**A thread switch can happen between any two instructions**
+
+Note: instructions do not equal program statements; a program statement can be made of multiple instructions
+
+Context switch must be **transparent** for processes/threads. When dispatched again, a process/thread should not notice that something else was running in the meantime (except for elapsed time); so the OS must save **all** state that affects the thread.
+
+The state is called the **process/thread context**.  
+Switching between process/threads results in a **context switch**
+
+A diagram of a simplified explict thread switch:
+
+![explicit thread switch](imgs/5-46_explicit-thread-switch.jpg)
+
+Assuming we have kernel-level threads, we will go through an example of a context switch
+
+![context-switch](imgs/5-48_context-switch.jpg)
+
+### Thread Switching in OS/161
