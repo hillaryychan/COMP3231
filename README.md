@@ -6,8 +6,5 @@
 3. Concurrency and Deadlock
     1. [Concurrency and Synchronisation](https://github.com/hillaryychan/COMP3231/blob/master/03_Concurrency-and-Synchronisation.md)
     2. [Deadlock](https://github.com/hillaryychan/COMP3231/blob/master/04_Deadlock.md)
-4. [File Systems]()
-5. [Scheduling]()
-6. [I/O]()
-7. [Multiprocessors]()
-8. [Memory and Virtual Memory Management]()
+4. [System Calls](https://github.com/hillaryychan/COMP3231/blob/master/06_System-Calls.md)
+5. [Memory Hierarchy](https://github.com/hillaryychan/COMP3231/blob/master/07_Memory-Hierarchy.md)
