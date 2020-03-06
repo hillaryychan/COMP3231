@@ -35,7 +35,7 @@ Some system calls for file management
 
 A stripped down shell is essentially:
 
-`c0_`` C
+``` C
 while (TRUE) {                              // repeat forever
     type_prompt();                          // display prompt
     read_command(command, parameters)       // input from terminal
@@ -48,7 +48,7 @@ while (TRUE) {                              // repeat forever
         execve(command, parameters, 0);     // execute command
     }
 }
-`c0_``
+```
 
 Some Win32 API calls and their equivalent UNIX syscalls:
 
@@ -82,11 +82,11 @@ In privileged-mode operation, to protect the operating system execution, two or 
 
 An example of an _unsafe_ instruction would be the `cli` instruction on the x86 architecture, which disables interrupts. An example exploit:
 
-`c0_`` assembly
+``` assembly
 cli /* disable interupts */
 while (true)
     /* loop forever */
-`c0_``
+```
 
 The accessibility of addresses within an address space changes depending on the operating mode (to protect kernel code and data). Note that the exact memory ranges are usually configurable and vary between CPU architectures and/or operating systems 
 
@@ -147,3 +147,8 @@ CP0 Registers:
 
 For now we will only focus on the registers in **bold**. We will look at the other ones later
 
+![CP0 registers](imgs/6-26_cp0-registers.jpg)
+
+### Hardware Exception Handling
+
+![hardware exception handling](imgs/6-35_hardware-exception-handling.jpg)
