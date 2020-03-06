@@ -152,3 +152,52 @@ For now we will only focus on the registers in **bold**. We will look at the oth
 ### Hardware Exception Handling
 
 ![hardware exception handling](imgs/6-35_hardware-exception-handling.jpg)
+
+For now we will ignore how the exception is actually handled and how user-level registers are preserved. We will simply look at how we return from the exception.
+
+![Returning from an exception](imgs/6-42_returning-from-exception.jpg)
+
+## MIPS System Calls
+
+In MIPS, system calls are invoked via a `syscall` instruction. The instruction causes an exception and transfers control to the general exception handler. A convention (an agreement between the kernel and application) is required as to how user-level software indicated:
+
+* which system call is required
+* where its arguments are
+* where the results should go
+
+## OS/161 System Calls
+
+OS/161 uses the following conventions:
+
+* arguments are passed and returned via the normal C function calling convention
+* register `v0` contains the system call number;
+if successful, register `a3` contains `0` on return
+if unsuccessful, `v0` has the error number, which is stored in `errno` and `-1` is returned in `v0`
+
+![register conventions](imgs/6-48_register-conventions.png)
+
+Here is a walk through of a user-level system call, calling `read()`
+
+![Read syscall walkthrough](imgs/6-50_read_walkthrough.jpg)
+
+From the caller's perspective, the `read()` system call behaves like a normal function. It preserves the calling convention of the language. However the actual function implements its own convention by agreement with the kernel. Our OS/161 example assumes the kernel preserves appropriate registers (`s0-s8`, `sp`, `gp` `ra`). Most languages has similar _libraries_ that interface with the operating system.
+
+On the kernel side of the system call:
+
+* we change to the kernel stack
+* preserve registers by saving them into memory (on the kernel stack)
+* leave saved registers somewhere accessible to read arguments and store return values
+* do the `read()`
+* restore registers
+* switch back to the user stack
+* return to the operation
+
+## OS/161 Exception Handling
+
+Note: the following code is from the uniprocessor variant of 0S161 (v1.x). It is simpler but broadly similar to the current version
+
+![0S161 exception handling](imgs/6-60_os161-exception-handling.jpg)
+
+After this, the kernel deals with whatever causes the exception; a syscall, interrupt, page fault etc. and potentially modifies the _trapframe_. `mips_trap` eventually returns
+
+![OS161 exception return](imgs/6-71_os161-exception-return.jpg)
