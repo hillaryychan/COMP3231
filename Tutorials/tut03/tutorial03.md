@@ -29,7 +29,7 @@ CV style answer with a variable flag = 0, a lock l, and a CV cv updated
 ``` C
 wait_for_update()
 {
-            lock_acquire(l)
+    lock_acquire(l)
     while(flag == 0)
     cv_wait(cv,l)
     lock_release(l)
@@ -37,10 +37,10 @@ wait_for_update()
 
 signal_update_occurred()
 {
-lock_acquire(l)
+    lock_acquire(l)
     flag = 1
     cv_signal(cv,l)
-lock_release(l)
+    lock_release(l)
 }
 ```
 
@@ -65,7 +65,7 @@ CV style answer with a variable occupants = 0, a lock room_lock, and a CV room_c
 ``` C
 enter_room()
 {
-            lock_acquire(room_lock);
+    lock_acquire(room_lock);
     while(occupants == 10)
     cv_wait(room_cv,room_lock);
     occupants = occupants + 1;
