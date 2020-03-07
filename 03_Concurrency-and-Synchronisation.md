@@ -320,7 +320,7 @@ monitor example {
 
 ### Condition Variables
 
-**Condition variables** are a mechanism to block when waiting for an in additon to ensuring mutual exclusion. e.g. for the producer-consumer problem when the buffer is empty or full.
+**Condition variables** are a mechanism to block when waiting for an event in additon to ensuring mutual exclusion. e.g. for the producer-consumer problem when the buffer is empty or full.
 
 To allow a process to wait within the monitor, a **condition variable** must be declared as: `condition x,y;`.  
 Condition variables can only be used with the operations `wait` and `signal`.  
