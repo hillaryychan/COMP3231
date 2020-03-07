@@ -174,15 +174,23 @@ Switching between each process (in-kernel thread) is performed by the function s
 ### Kernel Entry and Exit
 
 Q9. What is the EPC register? What is it used for?
+
 Q10. What happens to the KUc and IEc bits in the STATUS register when an exception occurs? Why? How are they restored?
+
 Q11. What is the value of ExcCode in the Cause register immediately after a system call exception occurs?
+
 Q12. Why must kernel programmers be especially careful when implementing system calls?
+
 Q13. The following questions are focused on the case study of the system call convention used by OS/161 on the MIPS R3000 from the lecture slides.
+
   a.How does the 'C' function calling convention relate to the system call interface between the application and the kernel?
   b.  What does the most work to preserve the compiler calling convention, the system call wrapper, or the OS/161 kernel.
   c. At minimum, what additional information is required beyond that passed to the system-call wrapper function?
+
 Q14. In the example given in lectures, the library function read invoked the read system call. Is it essential that both have the same name? If not, which name is important?
+
 Q15. To a programmer, a system call looks like any other call to a library function. Is it important that a programmer know which library function result in system calls? Under what circumstances and why?
+
 Q16. Describe a plausible sequence of activities that occur when a timer interrupt results in a context switch.
 
 Page last modified: 4:38pm on Thursday, 5th of March, 2020
