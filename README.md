@@ -9,8 +9,8 @@
     2. [Deadlock](https://github.com/hillaryychan/COMP3231/blob/master/04_Deadlock.md)
 4. File Systems
     1. [Computer Hardware Review (Memory Hierarchy)](https://github.com/hillaryychan/COMP3231/blob/master/07_Memory-Hierarchy.md)
-    2. [File Management I]()
-    3. [File Management II]()
+    2. [File Management I](https://github.com/hillaryychan/COMP3231/blob/master/08_File-Management.md)
+    3. [File Management II](https://github.com/hillaryychan/COMP3231/blob/master/09_File-System-Internals.md)
 5. [Scheduling]()
 6. [I/O]()
 7. [Multiprocessors]()
