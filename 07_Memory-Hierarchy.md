@@ -11,7 +11,11 @@ There is a memory hierarchy where going down the hierarchy, there is
 
 ![Memory hierarchy](imgs/7-4_memory-heirarchy.png)
 
+## Caching
+
 Given two levels of data storage: small and fast vs. large and slow, we can speed access to slower storage by using an intermediate-speed storage as a **cache**
+
+A hardware approach to improving system performance is by using cache memory (SRAM)
 
 ![caching](imgs/7-6_caching.png)
 
@@ -29,3 +33,27 @@ main memory access time is 10ns
 hit rate is 95%
 
 ![effective access time example](imgs/7-10_access-time-example.png)
+
+### Moving Disk Head Mechanism
+
+![Moving disk head diagram](imgs/7-11_moving-disk-head-mechanism.png)
+
+Disk can read/write data relatively fast; 15,000rpm drive - 80MB/sec; 1KB block is read in12 microseconds.  
+Access time is dominated by the time to late the head over data:
+
+* rotational latency - half one rotation is 2 milliseconds
+* seek time -full inside to outside is 8 milliseconds; track to track .5 milliseconds
+
+2 milliseconds is 164KB in "lost bandwidth"
+
+An OS approach to improving system performance is by using main memoy (DRAM)
+
+![DRMA](imgs/7-13_DRAM.png)
+
+The strategy is to avoid waiting for disk access by keeping a subset of the disk's data in main memory. The OS uses main memory as a **cache** of disk contents.
+
+An application approach to improving system performance is to store data retrieved from the Internet on your local hard disk:
+
+![Improving application performace](imgs/7-15_internet-hard-disk.png)
+
+The strategy is to avoid waiting for Internet access by keeping a subset  of the Internet's data on disk so that the application uses the disk as a cache of the Internet

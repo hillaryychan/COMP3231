@@ -8,7 +8,7 @@
     1. [Concurrency and Synchronisation](https://github.com/hillaryychan/COMP3231/blob/master/03_Concurrency-and-Synchronisation.md)
     2. [Deadlock](https://github.com/hillaryychan/COMP3231/blob/master/04_Deadlock.md)
 4. File Systems
-    1. [Memory Hierarchy](https://github.com/hillaryychan/COMP3231/blob/master/07_Memory-Hierarchy.md)
+    1. [Computer Hardware Review (Memory Hierarchy)](https://github.com/hillaryychan/COMP3231/blob/master/07_Memory-Hierarchy.md)
     2. [File Management I]()
     3. [File Management II]()
 5. [Scheduling]()
