@@ -55,23 +55,24 @@ exit - exit with specified code
 getpid - get process id of current process
 
 Answer the following questions about the code below.
-  a. What is the value of i in the parent and child after fork.
+
+  a. What is the value of i in the parent and child after fork.  
   i = 1 since the child is a copy of the parent process
 
-  b. What is the value of my_pid in a parent after a child updates it?
+  b. What is the value of my_pid in a parent after a child updates it?  
   The parent process id does not change. The parent and child andparent are independent after forking
 
-  c. What is the process id of /bin/echo?
+  c. What is the process id of /bin/echo?  
   execl replaces the content of a running process with a specifiedexecutable. The process id does not change.
 
-  d. Why is the code after execl not expected to be reached in the normal case?
+  d. Why is the code after execl not expected to be reached in the normal case? 
   execl replaces the process image with anew one and you never run anymore lines of code.
   A successful execl results in the code being replaced. If itsucceeds, execl does not return as there is no previous code toreturn to.
 
-  e. How many times is Hello World printed when FORK_DEPTH is 3?
+  e. How many times is Hello World printed when FORK_DEPTH is 3?  
   4 times
 
-  f. How many processes are created when running the code (including the first process)?
+  f. How many processes are created when running the code (including the first process)?  
   8 processes;
 
 ``` txt
@@ -127,19 +128,21 @@ main()
 ```
 
 Q6.
-  a. What does the following code do?
-  Create file named testfile
-  If it fails, exit
-  Counts the length of a test string
-  Write test string "The quick brown fox jumps over the lazy dog.\n" to testfile
-  If fail to write exit
+  a. What does the following code do?  
+  Create file named testfile  
+  If it fails, exit  
+  Counts the length of a test string  
+  Write test string "The quick brown fox jumps over the lazy dog.\n" to testfile  
+  If fail to write exit  
   Close file
-  b. In addition to O_WRONLY, what are the other 2 ways one can open a file?
-  `O_RDONLY` - read-only
-  `O_RDWR` - read-write
-  c. What open return in fd, what is it used for? Consider success and failure in your answer.
-  The fd is used in other file related systems to identify the file to operate on.
-  Returns and integer greater than zero for a successfully opened file
+
+  b. In addition to O_WRONLY, what are the other 2 ways one can open a file?  
+  `O_RDONLY` - read-only  
+  `O_RDWR` - read-write  
+
+  c. What open return in fd, what is it used for? Consider success and failure in your answer.  
+  The fd is used in other file related systems to identify the file to operate on.  
+  Returns and integer greater than zero for a successfully opened file  
   If failed returns -1
 
 ``` C
@@ -182,14 +185,15 @@ main()
 ```
 
 Q7. The following code is a variation of the previous code that writes twice.
-  a. How big is the file (in bytes) after the two writes?
+
+  a. How big is the file (in bytes) after the two writes?  
   50 bytes. For each open file, the os keeps track of the current offset within the file. The current offset is where the next read or write will start from. The current offset is usually the location of offset of the end of the previous read or write. You would expect the file size to be 90 bytes after two 45 byte writes, if it werent for lseek's interference
     The qThe quick brown fox jumps over the lazy dog.
 
-  b. What is `lseek()` doing that is affecting the final file size?
+  b. What is `lseek()` doing that is affecting the final file size?  
   lseek moves position in file to specified loc, moves 5 char from beginning of file
 
-  c. What over options are there in addition to SEEK_SET?.
+  c. What over options are there in addition to SEEK_SET?  
   `SEEK_CUR`, `SEEK_END`
 
 ``` C
@@ -247,25 +251,27 @@ main()
 ```
 
 Q8. Compile either of the previous two code fragments on a UNIX/Linux machine and run strace ./a.out and observe the output.
-  a. What is strace doing?
+
+  a. What is strace doing?  
   strace prints a trace of all system calls invoked by a process along with its arguments.
 
-  b. Without modifying the above code to print fd, what is the value of the file descriptor used to write to the open file?
-  3
+  b. Without modifying the above code to print fd, what is the value of the file descriptor used to write to the open file?  
+  3  
   usually 0,1,2 are stdin, stdout, stderr
 
-  c. printf does not appear in the system call trace. What is appearing in it's place? What's happening here?
+  c. printf does not appear in the system call trace. What is appearing in it's place? What's happening here?  
   printf is a wrapper to write. It creates a buffer based on the string specification that is passed. The buffer is then written to (the console) fd 1 using write()
 
 Q9. Compile and run the following code.
-  a. What do the following code do?
+
+  a. What do the following code do?  
   Change working directory to parent directory then run ls.
 
-  b. After the program runs, the current working directory of the shell is the same. Why?
-  When you run a program in the shell it forks the program then exececutes.
+  b. After the program runs, the current working directory of the shell is the same. Why?  
+  When you run a program in the shell it forks the program then exececutes.  
   The shell forks a child process that runs the code. Each process has its own current working directory, so the code abive changes the current working directory of the child process, the current working directory of the parent remains the same
 
-  c. In what directory does /bin/ls run in? Why?
+  c. In what directory does /bin/ls run in? Why?  
   exec replaces the contents of the child process with ls, not the environment the child process runs in. The current working directory is part of the environment that the OS manages on behalf of every process, so ls run in the current directory of the child process, which is '..'
 
 ``` C
@@ -289,10 +295,11 @@ main()
 ```
 
 Q10. On UNIX, which of the following are considered system calls? Why?
-  a. read()       syscall
-  b. printf()     not syscall
-  c. memcpy()     not syscall
-  d. open()       syscall
+
+  a. read()       syscall  
+  b. printf()     not syscall  
+  c. memcpy()     not syscall  
+  d. open()       syscall  
   e. strncpy()    not syscall
 
 ### Processes and Threads

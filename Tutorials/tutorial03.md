@@ -659,18 +659,23 @@ The thread subsystem in OS/161 uses a linked list of threads to manage some of i
 ### Concurrency and Deadlock
 
 Q7. For each of the following scenarios, one or more dining philosophers are going hungry. What is the condition the philosophers are suffering from?
-  a. Each philosopher at the table has picked up his left fork, and is waiting for his right fork
+
+  a. Each philosopher at the table has picked up his left fork, and is waiting for his right fork  
   deadlock
-  b. Only one philosopher is allowed to eat at a time. When more than one philosophy is hungry, the youngest one goes first. The oldest philosopher never gets to eat.
+
+  b. Only one philosopher is allowed to eat at a time. When more than one philosophy is hungry, the youngest one goes first. The oldest philosopher never gets to eat.  
   starvation
-  c. Each philosopher, after picking up his left fork, puts it back down if he can't immediately pick up the right fork to give others a chance to eat. No philosopher is managing to eat despite lots of left fork activity.
+
+  c. Each philosopher, after picking up his left fork, puts it back down if he can't immediately pick up the right fork to give others a chance to eat. No philosopher is managing to eat despite lots of left fork activity.  
   livelock
 
 Q8. What is starvation, give an example?
+
 Starvation is where the system allocates resources according to some policy such that progress is made, however one or more processes never receive the resource they require as a result of that policy.  
 E.g. a pritner is allocted based on smalles print job first in order to improve response for small jobs. A large job on a busy system may never print and this _starve_
 
 Q9. Two processes are attempting to read independent blocks from a disk, which involves issuing a seek command and a read command. Each process is interrupted by the other in between its seek and read. When a process discovers the other process has moved the disk head, it re-issues the original seek to re-position the head for itself, which is again interrupted prior to the read. This alternate seeking continues indefinitely, with neither process able to read their data from disk. Is this deadlock, starvation, or livelock? How would you change the system to prevent the problem?
+
 It's livelock. Allow each process to lock the disk and issue both commands together mutually exclusively then release the lock
 
 Q10. Describe four ways to prevent deadlock by attacking the conditions required for deadlock.
@@ -685,6 +690,7 @@ Q10. Describe four ways to prevent deadlock by attacking the conditions required
 * circular wait condition - order the resource numerically and request them in numerical order
 
 Q11. Answer the following questions about the tables.
+
 ``` txt
             available
             r1     r2     r3     r4
@@ -699,7 +705,7 @@ p4           2      3      5      4      4      3      5      6      ?      ?   
 p5           0      3      3      2      0      6      5      2      ?      ?      ?      ?
 ```
   a. Compute what each process still might request and display in the columns labeled "still needs".
-still needs
+
 ``` txt
             available
             r1     r2     r3     r4
@@ -713,13 +719,17 @@ p3           0      0      3      4      6      6      5      6      6      6   
 p4           2      3      5      4      4      3      5      6      2      0      0      2
 p5           0      3      3      2      0      6      5      2      0      3      2      0
 ```
-  b. Is the system in a safe or unsafe state? Why?
+  b. Is the system in a safe or unsafe state? Why?  
   safe: allocate p1 -> p4 -> p5 -> p2 -> p3
-  c. Is the system deadlocked? Why or why not?
+
+  c. Is the system deadlocked? Why or why not?  
   No. There are no processes remaining after our allocation schedule
-  d. Which processes, if any, are or may become deadlocked?
+
+  d. Which processes, if any, are or may become deadlocked?  
   None
+
   e. Assume a request from p3 arrives for (0,1,0,0)
+
 ``` txt
             available
             r1     r2     r3     r4
@@ -735,8 +745,10 @@ p5           0      3      3      2      0      6      5      2      0      3   
 ```
   1. Can the request be safely granted immediately?
   No
+
   2. In what state (deadlocked, safe, unsafe) would immediately granting the request leave the system?
   unsafe
+
   3. Which processes, if any, are or may become deadlocked if the request is granted immediately?
   p2 and p3
 
