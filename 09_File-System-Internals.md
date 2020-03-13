@@ -57,7 +57,7 @@ A file is divided into "blocks" - the unit of transfer to storage. Given the log
 
 **Internal fragmentation** is the space wasted **internal** to the allocated memory regions. Allocated memory may be slightly larger than requested memory; this size difference is wasted memory internal to the partition.
 
-#### Contiguous Allocation
+### Contiguous Allocation
 
 In **contiguous allocation**, a file occupies a contiguous series of blocks on the disk.  
 
@@ -75,13 +75,13 @@ Examples: ISO 9660 (CDROM FS)
 
 ![contiguous allocation](imgs/9-17_contiguous-allocation.png)
 
-#### Dynamic Allocation Strategies
+### Dynamic Allocation Strategies
 
 In **dynamic allocation** strategies, disk space is allocated in portions as needed. The allocation occurs in **fixed-sized** blocks.
 
 Advantages:
 
-* No external fragmentation
+* no external fragmentation
 * does not require pre-allocating disk space
 
 Disadvantages:
@@ -92,10 +92,114 @@ Disadvantages:
 
 ![dynamic allocation](imgs/9-18_dynamic-allocation.png)
 
-##### Linked List Allocation
+#### Linked List Allocation
 
-##### File Allocation Table
+In a **linked list** allocation, each block contains a pointer to the next block in the chain. Free blocks are also linked in the chain.
 
-#### Inode-based File System Structure
+![linked list allocation](imgs/9-20--linked-list-allocation.jpg)
 
+Advantages:
+
+* only single metadata entry per file
+* best for sequential files
+
+Disadvantages:
+
+* poor for random access
+* blocks end up scattered across the disk due to free list eventually being randomised
+
+#### File Allocation Table (FAT)
+
+The **File Allocation Table (FAT)** method keeps a map of the entire file system in a separate table. A table entry contains the number of the next block of the file. The last block in the file and empty blocks are marked using reserved values.
+
+The table is stored on the disk and is replicated in memory. This allows random access to be fast (following the in-memory disk)
+
+![FAT](imgs/9-22_fat.jpg)
+
+Disadvantages:
+
+* requires a lot of memory for large disks  
+`200GB = 200*10^6 * 1K blocks = 200*10^6 FAT entries = 800MB`, which is large back when we didn't have lot of memory
+* free block lookup is slow as it searches for a free entry in the table
+
+Example of file allocation table disk layout:
+
+![FAT disk layout](imgs/9-24_fat-disk-layout.png)
+
+Note that there are two copies of FAT in case one of them every fails.
+
+### Inode-based File System Structure
+
+The idea behind an **inode-based** file system structure is to have a separate table (index-node or i-node) for each file. We only keep the table for open files in memory, allowing fast random access. It is the most popular file system structure today.
+
+![inode fs](imgs/9-25_inode-fs.png)
+
+i-nodes occupy one or several disk areas. In the example below, a portion of the hard disk is reserved for storing i-nodes.
+
+![inode disk occpation](imgs/9-26_inode-disk-occupation.png)
+
+i-nodes  are allocated dynamically, hence free-space management is required for i-nodes.  
+We use fix-sized i-nodes to simplify dynamic allocation. The i-node contains entries for file attributes, references to blocks of where file blocks are located and reserve the last i-node entry for a pointer (a block number) to an extension i-node. The extension i-node will contain block numbers for higher offsets of the file
+
+A diagram of i-node entries:
+
+![free space management](imgs/9-27_free-space-management1.png)
+
+Free space management can be approached two ways:
+
+1. a linked list of free blocks in free blocks on disk
+2. keeping bitmaps of free blocks and free i-nodes on disks
+
+In approach 1, we'll have a list of all unallocated blocks. Background jobs can re-order the list for better contiguity.  
+We store in i-node entries other free blocks with the last entry pointing to the next block containing a list of free blocks. This does not reduce the disk capacity of free blocks. Only one block of pointers needs to be kept in main memory (that is the head of the list).
+
+When we need to use free blocks, we go through entries of free blocks in the head of the free block list. When we reach the final entry, the head of the list becomes the next block containing a free block entries and we can use the current block as a free block.
+
+![approach 1](imgs/9-28_free-space-linked-list.png)
+
+In approach 2, individual bits in a bit vector flags used and free blocks.  
+A 16GB disk with 512 byte blocks will have a 4MB table.  
+This may be too large to hold in main memory and becomes expensive to search (although optimisations are possible; e.g. a two level table)  
+Concentrating (de)allocation in a portion of the bitmap has the desirable effect of concentrating access. It also becomes simple to find contiguous free space.
+
+### Implementing directories
+
+Directories are stored like normal files expect the operating system does not let you access it directly. Directory entries are contained inside data blocks.
+
+The file system assigns special meaning to the content of these files;
+
+* a directory file is a list of directory entries
+* a directory entry contains file name, attributes and the file i-node number. This maps a human-oriented file-name to a system oriented name
+
+#### Directory Entries
+
+Directory entries can be fixed-sized or variable-sized.
+
+**Fixed-sized** directory entries are either too small (e.g; DOS has an 8 character name and 3 character suffix) or waste too much space (e.g. 255 characters per file name).  
+**Variable-sized** directory entries are dynamically allocated within the directory and can cause external fragmentation when these entries are freed. We can reduce external fragmentation by loading entries into RAM and then loading it back.
+
+#### Searching Directory Listings
+
+We can located files in a directory by using:
+
+* a linear scan - implementing a directory cache in software can speed this up
+* hash lookups
+* B-tree (containing 100s of 1000s of entries)
+
+#### Storing File Attributes
+
+![store file attributes](imgs/9-34_store-file-attr.png)
+
+(a) disk addresses and attributes in a directory entry (e.g. FAT)  
+(b) directory in which each entry just refers to an i-node (e.g. UNIX)
+
+## Trade-off in File System Blocks
+
+File systems deal with 2 types of blocks; disk blocks or sectors (usually 512 bytes). File systems can have blocks the size of `512 * 2^N` where we would like `N` to be optimal.
+
+Larger blocks require less file system metadata, while smaller blocks waste less disk space (less internal fragmentation).  
+Sequential access is easier for larger block sizes as fewer I/O operations are required.  
+For random access, the larger the block size, the more unrelated data we get loaded. Spatial locality of access is what improves the situation.
+
+Choosing an appropriate block size is a compromise.
 
