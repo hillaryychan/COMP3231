@@ -396,6 +396,7 @@ insert_after(node_t *in_list, node_t *new_node);
 insert_before(node_t *in_list, node_t *new_node);
 remove(node_t *in_list);
 ```
+
 In OS/161, the threadlist is a doubling linked list where all the code is written under the assumption that is executes mutually exclusively, which in practice is ensured by interrupt disabling on the uniprocessor. Hence, there is no synchronisation in the threadlist code itself.
 
 Writing a synchronised version of the general list management code could be done with a single lock that is acquired for all updates to the list and nodes itself. This would not allow independent updates to separate nodes in the list to proceed in parallel.
@@ -704,6 +705,7 @@ p3           0      0      3      4      6      6      5      6      ?      ?   
 p4           2      3      5      4      4      3      5      6      ?      ?      ?      ?
 p5           0      3      3      2      0      6      5      2      ?      ?      ?      ?
 ```
+
   a. Compute what each process still might request and display in the columns labeled "still needs".
 
 ``` txt
@@ -719,6 +721,7 @@ p3           0      0      3      4      6      6      5      6      6      6   
 p4           2      3      5      4      4      3      5      6      2      0      0      2
 p5           0      3      3      2      0      6      5      2      0      3      2      0
 ```
+
   b. Is the system in a safe or unsafe state? Why?  
   safe: allocate p1 -> p4 -> p5 -> p2 -> p3
 
@@ -743,13 +746,14 @@ p3           0      1      3      4      6      6      5      6      6      5   
 p4           2      3      5      4      4      3      5      6      2      0      0      2
 p5           0      3      3      2      0      6      5      2      0      3      2      0
 ```
-  1. Can the request be safely granted immediately?
+
+  1. Can the request be safely granted immediately?  
   No
 
-  2. In what state (deadlocked, safe, unsafe) would immediately granting the request leave the system?
+  2. In what state (deadlocked, safe, unsafe) would immediately granting the request leave the system?  
   unsafe
 
-  3. Which processes, if any, are or may become deadlocked if the request is granted immediately?
+  3. Which processes, if any, are or may become deadlocked if the request is granted immediately?  
   p2 and p3
 
 
