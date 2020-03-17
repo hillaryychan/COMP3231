@@ -7,7 +7,7 @@ Email: kevin.luong@student.unsw.edu.au
 
 ### Operating Systems Intro
 
-Q1. What are some of the differences between a processor running in privileged mode (also called kernel mode) and user mode? Why are the two modes needed?
+**Q1.** What are some of the differences between a processor running in privileged mode (also called kernel mode) and user mode? Why are the two modes needed?
 
 kernel:
 
@@ -25,18 +25,18 @@ user:
 
 Modes are required to endure that applications (running in user mode) cannot bypass, circumvent or take control of the operating system.
 
-Q2. What are the two main roles of an Operating System?
+**Q2.** What are the two main roles of an Operating System?
 
 1) Manage resources distribution amongst competing programs or users according to some systedm policy
 2) Provide abstraction to hardware; hide details of hardware so that applications have a common interface with it; don't need to worry about i/o or anything a syscall can do
 
-Q3. Given a high-level understanding of file systems, explain how a file system fulfills the two roles of an operating system?
+**Q3.** Given a high-level understanding of file systems, explain how a file system fulfills the two roles of an operating system?
 
 At the level of the hardware, storage involves low-level controller hardware and storage devices that store blocks of data at many locations in the store. The OS filesystem abstracts above all these details and provides and interface to store, name and organise arbitrary unstructured data.
 
 The file system also arbitrates between competing processors by managing allocated and free space on the storage device, in addition to enforcing limits on storage consumption (e.g. quotas)
 
-Q4. Which of the following instructions (or instruction sequences) should only be allowed in kernel mode?
+**Q4.** Which of the following instructions (or instruction sequences) should only be allowed in kernel mode?
 
 o Disable all interrupts.
 x Read the time of day clock.
@@ -47,7 +47,7 @@ x Trigger the write of all buffered blocks associated with a file back to disk (
 
 ### OS system call interface
 
-Q5. The following code contains the use of typical UNIX process management system calls: fork(), execl(), exit() and getpid(). If you are unfamiliar with their function, browse the man pages on a UNIX/Linux machine get an overview, e.g: man fork
+**Q5.** The following code contains the use of typical UNIX process management system calls: fork(), execl(), exit() and getpid(). If you are unfamiliar with their function, browse the man pages on a UNIX/Linux machine get an overview, e.g: man fork
 fork - clones process
 execl - replace current process with a new one
 exit - exit with specified code
@@ -127,7 +127,7 @@ main()
 }
 ```
 
-Q6.
+**Q6.**
   a. What does the following code do?  
   Create file named testfile  
   If it fails, exit  
@@ -184,7 +184,7 @@ main()
 }
 ```
 
-Q7. The following code is a variation of the previous code that writes twice.
+**Q7.** The following code is a variation of the previous code that writes twice.
 
   a. How big is the file (in bytes) after the two writes?  
   50 bytes. For each open file, the os keeps track of the current offset within the file. The current offset is where the next read or write will start from. The current offset is usually the location of offset of the end of the previous read or write. You would expect the file size to be 90 bytes after two 45 byte writes, if it werent for lseek's interference
@@ -250,7 +250,7 @@ main()
 }
 ```
 
-Q8. Compile either of the previous two code fragments on a UNIX/Linux machine and run strace ./a.out and observe the output.
+**Q8.** Compile either of the previous two code fragments on a UNIX/Linux machine and run strace ./a.out and observe the output.
 
   a. What is strace doing?  
   strace prints a trace of all system calls invoked by a process along with its arguments.
@@ -262,7 +262,7 @@ Q8. Compile either of the previous two code fragments on a UNIX/Linux machine an
   c. printf does not appear in the system call trace. What is appearing in it's place? What's happening here?  
   printf is a wrapper to write. It creates a buffer based on the string specification that is passed. The buffer is then written to (the console) fd 1 using write()
 
-Q9. Compile and run the following code.
+**Q9.** Compile and run the following code.
 
   a. What do the following code do?  
   Change working directory to parent directory then run ls.
@@ -294,7 +294,7 @@ main()
 }
 ```
 
-Q10. On UNIX, which of the following are considered system calls? Why?
+**Q10.** On UNIX, which of the following are considered system calls? Why?
 
   a. read()       syscall  
   b. printf()     not syscall  
@@ -304,7 +304,7 @@ Q10. On UNIX, which of the following are considered system calls? Why?
 
 ### Processes and Threads
 
-Q11. In the three-state process model, what do each of the three states signify? What transitions are possible between each of the states, and what causes a process (or thread) to undertake such a transition?
+**Q11.** In the three-state process model, what do each of the three states signify? What transitions are possible between each of the states, and what causes a process (or thread) to undertake such a transition?
 
 States:
 
@@ -318,13 +318,13 @@ running -> blocked : a requested resource is unavailable, so it waits for it to 
 blocked -> ready   : a resource has become available so it is ready to continue execution
 
 
-Q12. Given N threads in a uniprocessor system. How many threads can be running at the same point in time? How many threads can be ready at the same time? How many threads can be blocked at the same time?
+**Q12.** Given N threads in a uniprocessor system. How many threads can be running at the same point in time? How many threads can be ready at the same time? How many threads can be blocked at the same time?
 
 running: 1 since it is a uniprocessor
 blocked: N - running - ready; max of N threads can be blocked
 ready  : N - blocked - running; max of N-1 thread waiting
 
-Q13. Compare reading a file using a single-threaded file server and a multithreaded file server. Within the file server, it takes 15 msec to get a request for work and do all the necessary processing, assuming the required block is in the main memory disk block cache. A disk operation is required for one third of the requests, which takes an additional 75 msec during which the thread sleeps. How many requests/sec can a server handled if it is single threaded? If it is multithreaded?
+**Q13.** Compare reading a file using a single-threaded file server and a multithreaded file server. Within the file server, it takes 15 msec to get a request for work and do all the necessary processing, assuming the required block is in the main memory disk block cache. A disk operation is required for one third of the requests, which takes an additional 75 msec during which the thread sleeps. How many requests/sec can a server handled if it is single threaded? If it is multithreaded?
 
 singlethread: 25 requests per second
 cache hits take 15msec and cache misses take 90msec with 1/3
@@ -337,14 +337,14 @@ all processes waiting for the disk is overlapped, so every request takes 15 msec
 
 ### Critical sections
 
-Q14. The following fragment of code is a single line of code. How might a race condition occur if it is executed concurrently by multiple threads? Can you give an example of how an incorrect result can be computed for x.
+**Q14.** The following fragment of code is a single line of code. How might a race condition occur if it is executed concurrently by multiple threads? Can you give an example of how an incorrect result can be computed for x.
 
 x = x + 1;
 
 When all threads try to access the variable; read and write to it
 The memory location corresponding to x is loaded into a register, incremented and then stored back into memory. During the interval between the load and store in the first thread, another thread may perform a load, increment and store and when control passes back to the first thread, the results of the scond are overwritten.
 
-Q15. The following function is called by multiple threads (potentially concurrently) in a multi-threaded program. Identify the critical section(s) that require(s) mutual exclusion. Describe the race condition or why no race condition exists.
+**Q15.** The following function is called by multiple threads (potentially concurrently) in a multi-threaded program. Identify the critical section(s) that require(s) mutual exclusion. Describe the race condition or why no race condition exists.
 
 ``` C
 int i;
@@ -365,7 +365,7 @@ void foo()
 There is no race condition on j since it is a local variable per thread.
 i is a variable shared between threads so it would form a critical section
 
-Q16. The following function is called by threads in a multi-thread program. Under what conditions would it form a critical section.
+**Q16.** The following function is called by threads in a multi-thread program. Under what conditions would it form a critical section.
 
 ``` C
 void inc_mem(int *iptr)

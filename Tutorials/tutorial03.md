@@ -8,7 +8,7 @@ The following problems are designed to familiarise you with some of the problems
 
 ### Coordinating activities
 
-Q1. What synchronisation mechanism or approach might one take to have one thread wait for another thread to update some state?
+**Q1.** What synchronisation mechanism or approach might one take to have one thread wait for another thread to update some state?
 
 Semaphore style answer (semaphore updated, with count initialised a 0)
 
@@ -44,7 +44,7 @@ signal_update_occurred()
 }
 ```
 
-Q2. A particular abstraction only allows a maximum of 10 threads to enter the "room" at any point in time. Further threads attempting to enter the room have to wait at the door for another thread to exit the room. How could one implement a synchronisation approach to enforce the above restriction?
+**Q2.** A particular abstraction only allows a maximum of 10 threads to enter the "room" at any point in time. Further threads attempting to enter the room have to wait at the door for another thread to exit the room. How could one implement a synchronisation approach to enforce the above restriction?
 
 Semaphore style answer (semaphore room, with count initialised to 10)
 
@@ -82,7 +82,7 @@ leave_room()
 }
 ```
 
-Q3. Multiple threads are waiting for the same thing to happen (e.g. a disk block to arrive from disk). Write pseudo-code for a synchronising and waking the multiple threads waiting for the same event.
+**Q3.** Multiple threads are waiting for the same thing to happen (e.g. a disk block to arrive from disk). Write pseudo-code for a synchronising and waking the multiple threads waiting for the same event.
 
 A semaphore style answer with a variable waiters_count = 0, disk_block_status = NOT_READY, a semaphore block_mutex initialised to 1, and block_sem initialised to 0.
 
@@ -133,7 +133,7 @@ make_block_ready()
 
 ### Identify Deadlocks
 
-Q4. Here are code samples for two threads that use semaphores (count initialised to 1). Give a sequence of execution and context switches in which these two threads can deadlock.
+**Q4.** Here are code samples for two threads that use semaphores (count initialised to 1). Give a sequence of execution and context switches in which these two threads can deadlock.
 
 Propose a change to one or both of them that makes deadlock impossible. What general principle do the original threads violate that causes them to deadlock?
 
@@ -220,7 +220,7 @@ void you() {
 
 ### More Deadlock Identification
 
-Q5. Here are two more threads. Can they deadlock? If so, give a concurrent execution in which they do and propose a change to one or both that makes them deadlock free.
+**Q5.** Here are two more threads. Can they deadlock? If so, give a concurrent execution in which they do and propose a change to one or both that makes them deadlock free.
 
 ``` C
 lock *file1, *file2, *mutex;
@@ -382,7 +382,7 @@ void laurel() {
 
 ### Synchronised Lists
 
-Q6. Describe (and give pseudocode for) a synchronised linked list structure based on thread list code in the OS/161 codebase (kern/thread/threadlist.c). You may use semaphores, locks, and condition variables as you see fit. You must describe (a proof is not necessary) why your algorithm will not deadlock.
+**Q6.** Describe (and give pseudocode for) a synchronised linked list structure based on thread list code in the OS/161 codebase (kern/thread/threadlist.c). You may use semaphores, locks, and condition variables as you see fit. You must describe (a proof is not necessary) why your algorithm will not deadlock.
 
 In a general sense, the interface to the synchronised list is as follows.
 
@@ -659,7 +659,7 @@ The thread subsystem in OS/161 uses a linked list of threads to manage some of i
 
 ### Concurrency and Deadlock
 
-Q7. For each of the following scenarios, one or more dining philosophers are going hungry. What is the condition the philosophers are suffering from?
+**Q7.** For each of the following scenarios, one or more dining philosophers are going hungry. What is the condition the philosophers are suffering from?
 
   a. Each philosopher at the table has picked up his left fork, and is waiting for his right fork  
   deadlock
@@ -670,16 +670,16 @@ Q7. For each of the following scenarios, one or more dining philosophers are goi
   c. Each philosopher, after picking up his left fork, puts it back down if he can't immediately pick up the right fork to give others a chance to eat. No philosopher is managing to eat despite lots of left fork activity.  
   livelock
 
-Q8. What is starvation, give an example?
+**Q8.** What is starvation, give an example?
 
 Starvation is where the system allocates resources according to some policy such that progress is made, however one or more processes never receive the resource they require as a result of that policy.  
 E.g. a pritner is allocted based on smalles print job first in order to improve response for small jobs. A large job on a busy system may never print and this _starve_
 
-Q9. Two processes are attempting to read independent blocks from a disk, which involves issuing a seek command and a read command. Each process is interrupted by the other in between its seek and read. When a process discovers the other process has moved the disk head, it re-issues the original seek to re-position the head for itself, which is again interrupted prior to the read. This alternate seeking continues indefinitely, with neither process able to read their data from disk. Is this deadlock, starvation, or livelock? How would you change the system to prevent the problem?
+**Q9.** Two processes are attempting to read independent blocks from a disk, which involves issuing a seek command and a read command. Each process is interrupted by the other in between its seek and read. When a process discovers the other process has moved the disk head, it re-issues the original seek to re-position the head for itself, which is again interrupted prior to the read. This alternate seeking continues indefinitely, with neither process able to read their data from disk. Is this deadlock, starvation, or livelock? How would you change the system to prevent the problem?
 
 It's livelock. Allow each process to lock the disk and issue both commands together mutually exclusively then release the lock
 
-Q10. Describe four ways to prevent deadlock by attacking the conditions required for deadlock.
+**Q10.** Describe four ways to prevent deadlock by attacking the conditions required for deadlock.
 
 * mutual exclusion condition
   * make resource shareable; i.e allow concurrent access to read-only file. However, in general some resources are not shareable and require mutual exclusion
@@ -690,7 +690,7 @@ Q10. Describe four ways to prevent deadlock by attacking the conditions required
   * pre-empt the resource; not always possible
 * circular wait condition - order the resource numerically and request them in numerical order
 
-Q11. Answer the following questions about the tables.
+**Q11.** Answer the following questions about the tables.
 
 ``` txt
             available
