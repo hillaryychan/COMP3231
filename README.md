@@ -16,3 +16,7 @@
 6. [I/O]()
 7. [Multiprocessors]()
 8. [Memory and Virtual Memory Management]()
+9. Case Study
+    1. [ext2 File System](https://github.com/hillaryychan/COMP3231/blob/master/notes/11_Case-Study:ext2.md)
+
+
