@@ -27,7 +27,7 @@ sll # shift left logical
 srl # shift right logical
 ```
 
-All instructions are encoded in 32-bit. Some instructions have _immediate_ operands. Immediate values are constants encoded in the instruction itself and are of 16-bit value. 
+All instructions are encoded in 32-bit. Some instructions have _immediate_ operands. Immediate values are constants encoded in the instruction itself and are of 16-bit value.
 
 Examples:
 
@@ -50,8 +50,8 @@ sw  r4, 32(r29)     # store result back into a
 User-mode accessible registers:
 
 * 32 general purpose registers
-  * `r0` is hardwired to `0`
-  * `r31` is the **link** register for `jal` instruction, which stores the return address for when a `jal` completes
+    * `r0` is hardwired to `0`
+    * `r31` is the **link** register for `jal` instruction, which stores the return address for when a `jal` completes
 * `HI`/`LO` - `2 * 32-bits` for multiply and divide
 * `PC` - the program counter. It is not directly visible and is modified implicitly by jump and branch instructions
 
@@ -71,11 +71,11 @@ Branching and jumping have **branch delay slot**. The instruction following a br
 
 This is because MIPS uses RISC architecture; a 5 stage pipeline, where instructions are partially through a pipeline prior to `jump` having an effect
 
-![MIPS 5 stage pipline](imgs/5-9_MIPS-pipeline.png)
+![MIPS 5 stage pipline](../imgs/5-9_MIPS-pipeline.png)
 
 The `jal` (jump and link) instruction is used to implement function calls. When this happens `r23 = PC +8`. This is where the return address is stored when we return from the function call.
 
-![jal](imgs/5-10_jal.png)
+![jal](../imgs/5-10_jal.png)
 
 ### Compiler Register Conventions
 
@@ -86,7 +86,7 @@ There are 32 registers in MIPS and they all have some associations:
 | `0`       | `zero`    | Always returns 0. It's value is unchangeable              |
 | `1`       | `at`      | **assembly-temporary** Reserved for use by the assembler  |
 | `2-3`     | `v0-v1`   | Value (except `FP`) returned by subroutine                |
-| `4-7 `    | `a0-a3`   | (**arguments**) First four parameters for a subroutine    |
+| `4-7`     | `a0-a3`   | (**arguments**) First four parameters for a subroutine    |
 | `8-15`    | `t0-t7`   | (**temporaries**) subroutines may use without saving      |
 | `16-23`   | `s0-s7`   | Subroutine **register variables**: a subroutine which will write in one of these must save the old value and restore it before it exits, so the _calling_ routine sees their value preserved |
 | `24-25`   | `t8-t9`   | (**temporaries**) subroutines may use without saving      |
@@ -98,7 +98,7 @@ There are 32 registers in MIPS and they all have some associations:
 
 Example of a factorial function in MIPS
 
-![Factorial MIPS](imgs/5-13_MIPS-factorial.png)
+![Factorial MIPS](../imgs/5-13_MIPS-factorial.png)
 
 ### Function Stack Frames
 
@@ -108,15 +108,15 @@ The stack pointer points to the **end** of the current stack frame
 
 Example: assume `f1()` calls `f2()` which calls `f3()`
 
-![frame and stack pointers](imgs/5-14_stack-frame-pointer-evolution.jpg)
+![frame and stack pointers](../imgs/5-14_stack-frame-pointer-evolution.jpg)
 
 MIPS' calling convention for `gcc` has space reserved for arguments 1 to 4
 
-![stack frame](imgs/5-17_stack-frame.png)
+![stack frame](../imgs/5-17_stack-frame.png)
 
 Example:
 
-![stack frame example](imgs/5-18_stack-frame-example.jpg)
+![stack frame example](../imgs/5-18_stack-frame-example.jpg)
 
 ## The Process Model
 
@@ -130,22 +130,22 @@ Note: data can be dynamically grow up (via `malloc()`) and the stack can dynamic
 
 Below shows a processes stack and execution state at user and kernel levels
 
-![process model](imgs/5-24_process-model.png)
+![process model](../imgs/5-24_process-model.png)
 
 In user mode, processes (programs) are scheduled by the kernel and are isolated from each other. System calls transition into and return from the kernel  
 In kernel mode, nearly all activities are still associated with a process. The kernel memory is shared between all processes and concurrency issues exist between processes concurrently executing in a system call.
 
 ## The Thread Model
 
-![thread model](imgs/3-5_thread-model.png))
+![thread model](../imgs/3-5_thread-model.png))
 
 In the thread model, we have items shared by all threads in a process and items that exist per thread.
 
-![thread model item state](imgs/5-27_thread-model-item-state.png)
+![thread model item state](../imgs/5-27_thread-model-item-state.png)
 
 Each thread has its own stack
 
-![thread stack](imgs/5-28_thread-stack.png)
+![thread stack](../imgs/5-28_thread-stack.png)
 
 Here is a subset of POSIX threads API
 
@@ -167,15 +167,15 @@ int     pthread_rwlock_unlock(pthread_rwlock_t *);
 
 Independent of where we implement the threads, the application will call the library of POSIX threads
 
-If the application calls the library to create the threads, we can implement this functionality at a user-level or kernel-level. We could create a library in the system libraries (independent of the operating system); known as **user-level threads**. The library that provides the threads doesn't make any system calls, or cross into the operating system; the operating system will not be aware of these threads. Alternatively we could call into the library and it would call thread create in the operating system. The operating system will provide the implementation 
+If the application calls the library to create the threads, we can implement this functionality at a user-level or kernel-level. We could create a library in the system libraries (independent of the operating system); known as **user-level threads**. The library that provides the threads doesn't make any system calls, or cross into the operating system; the operating system will not be aware of these threads. Alternatively we could call into the library and it would call thread create in the operating system. The operating system will provide the implementation
 
 ### Implementing Threads in the User Space
 
 A view of user-level threads:
 
-![user level threads](imgs/5-31_user-level-threads.jpg)
+![user level threads](../imgs/5-31_user-level-threads.jpg)
 
-Implementation at user level means 
+Implementation at user level means
 
 * there is a User-Level Thread Control (TCB), ready queue, blocked queue, and dispatcher. * the kernel has no knowledge of the threads and it only sees a single process
 * if a thread blocks waiting for a resource held by another thread inside the same process, its state is saved and the dispatcher switches to another ready thread
@@ -199,14 +199,14 @@ There are work-around (e.g. a time signal per second to enable pre-emptive multi
 
 A view of kernel-level (or kernel-provided) threads:
 
-![kernel level threads](imgs/5-37-kernel-level-threads.jpg)
+![kernel level threads](../imgs/5-37-kernel-level-threads.jpg)
 
 Threads are implemented by the kernel so
 
 * TCBs are stored in the kernel. A subset of information (related to execution context) is in a traditional PCB. The TCBs have PCBs associated with them; resources associated with the group of threads (the process)
 * thread management calls are implemented as system calls; e.g. create, wait,exit
 
-**Advantages**
+**Advantages**:
 
 * **pre-emptive multi-threading**
 * **parallelism** - we can overlap blocking I/O with computation and take advantage of a multiprocessor
@@ -250,11 +250,11 @@ Switching between process/threads results in a **context switch**
 
 A diagram of a simplified explict thread switch:
 
-![explicit thread switch](imgs/5-46_explicit-thread-switch.jpg)
+![explicit thread switch](../imgs/5-46_explicit-thread-switch.jpg)
 
 Assuming we have kernel-level threads, we will go through an example of a context switch
 
-![context-switch](imgs/5-48_context-switch.jpg)
+![context-switch](../imgs/5-48_context-switch.jpg)
 
 ### Thread Switching in OS/161
 
@@ -262,7 +262,7 @@ The **very basic** idea behind the thread switch
 
 ``` C
 // file: switchframe.c
-// Note: lots of code removed - only basics 
+// Note: lots of code removed - only basics
 // of picking the next thread and running it reamin
 
 static

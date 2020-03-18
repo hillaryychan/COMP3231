@@ -29,21 +29,21 @@ This is known as a **race condition**.
 
 Concurrency can occur in a multiple processes with a single thread or in a single process with multiple threads.
 
-![Where is concurrency](imgs/3-5_thread-model.png)
+![Where is concurrency](../imgs/3-5_thread-model.png)
 
 There is in-kernel concurrency even for single threaded processes because there are global variables and resources in the OS that can be manipulated by processes through system calls.
 
-![in-kernel concurrency](imgs/3-6_in-kernel-concurrency.png)
+![in-kernel concurrency](../imgs/3-6_in-kernel-concurrency.png)
 
 We can control access to shared resources by controlling access to the code that accesses the resources. Uncoordinated entry to the critical region results in a race condition, which in turn leads to incorrect behaviour, deadlock, lost work etc.
 
 **Critical regions** or **critical sections** are regions of code that access a shared resource and their correctness relies on the shared resource not being concurrently modified by another thread/process/entity.
 
-![accessing critical regions](imgs/3-9_accessing-critical-regions.png)
+![accessing critical regions](../imgs/3-9_accessing-critical-regions.png)
 
 We've highlighted the critical regions in a basic linked list implementation below.
 
-![example critical region](imgs/3-12_example-critical-regions.png)
+![example critical region](../imgs/3-12_example-critical-regions.png)
 
 ## Critical Regions Solutions
 
@@ -62,7 +62,7 @@ If `lock == 0`, nobody is in the critical section and we are free to enter
 
 Looking at the execution sequence on the right-hand side, it is still possible for two threads to enter critical regions as the same time
 
-![execution problem](imgs/3-16_lock-solution-problem.jpg)
+![execution problem](../imgs/3-16_lock-solution-problem.jpg)
 
 ### Mutual Exclusion Solutions by Taking Turns
 
@@ -89,8 +89,8 @@ while (TRUE){
 This works due to _strict alternation_ of each process taking turns.  
 It does have the following **disadvantages**:
 
-- busy waiting
-- process must wait its turn while the other process is doing something else. If there are many processes, all of them must wait their turn. This does not guarantee progress and overall is a **poor solutions** when processes require the critical section for differing durations
+* busy waiting
+* process must wait its turn while the other process is doing something else. If there are many processes, all of them must wait their turn. This does not guarantee progress and overall is a **poor solutions** when processes require the critical section for differing durations
 
 ### Mutual Exclusion Solutions by Disabling Interrupts
 
@@ -101,9 +101,9 @@ After leaving the critical region, we enable interrupts.
 This is a nice simple solution that works only on uniprocessor machines.  
 It has the following **disadvantages**;
 
-- only available in the kernel; it is not safe to allow applications to disable interrupts
-- blocks everyone else, even with no contention; the OS will be unresponsive to interrupts from other devices which is unsafe for extended periods of time
-- does not work on a multiprocessor; interrupts are per CPU
+* only available in the kernel; it is not safe to allow applications to disable interrupts
+* blocks everyone else, even with no contention; the OS will be unresponsive to interrupts from other devices which is unsafe for extended periods of time
+* does not work on a multiprocessor; interrupts are per CPU
 
 ### Mutual Exclusion Solutions with Test-and-Set
 
@@ -122,7 +122,7 @@ if (lock == 1) {
 
 Hardware guarantees that the instruction executes **atomically** (that is as an indivisible unit).
 
-```
+``` assembly
 enter region:
     TSL REGISTER,LOCK   | copy lock to register and set lock to 1
     CMP REGISTER,#0     | was lock zero?
@@ -143,21 +143,22 @@ A possible solution to the busy-wait problem is by sleeping and waking up the th
 
 In the **producer-consumer problem** or **bounder buffer problem** we have:
 
-- a producer producing data items and storing them in a buffer
-- a consumer taking out the items from the buffer and consuming them
+* a producer producing data items and storing them in a buffer
+* a consumer taking out the items from the buffer and consuming them
 
-![producer consumer](imgs/3-25_producer-consumer.png)
+![producer consumer](../imgs/3-25_producer-consumer.png)
 
 **The issue**: we must keep an accurate count of items in the buffer
 
 The producer should:
 
-- sleep when the buffer is full
-- wakeup when there is an empty space in the buffer; the consumer can call wakeup when it consumes the first entry of the full buffer
+* sleep when the buffer is full
+* wakeup when there is an empty space in the buffer; the consumer can call wakeup when it consumes the first entry of the full buffer
 
 The consumer should:
- - sleep when the buffer is empty
- - wakeup when there are items available; the producer can call wakeup when it adds the first item to the buffer
+
+* sleep when the buffer is empty
+* wakeup when there are items available; the producer can call wakeup when it adds the first item to the buffer
 
 Our first proposed solution uses a locking primitive based on a test-and-set to protect the current access.
 
@@ -197,8 +198,8 @@ release_lock();         release_lock();
 
 Dijkstra (1965) introduced two primitives that are more powerful than a simple sleep and wakeup;
 
-- `P()`, `wait` or `down` to test
-- `V()`, `signal`, `up` to increment
+* `P()`, `wait` or `down` to test
+* `V()`, `signal`, `up` to increment
 
 If a resource is not available the corresponding semaphore blocks any process `wait`ing for the resource. Blocked processes are put into a process queue maintained by the semaphore, avoiding busy waits. When a process releases a resource, it `signal`s this by means of the semaphore. Signalling resumes a blocked process if there is any.  
 Wait and signal operations cannot be interrupted.  
@@ -242,6 +243,7 @@ Each primitive is atomic because interrupts are disabled for each.
 
 Semaphores can be used a synchronisation tools.  
 Say we have two threads with functions A and B, where we always want be to execute after A. Using a semaphore count intialised to 0, all we need is this:
+
 ``` C
 A() {
     ...
@@ -302,11 +304,11 @@ Mutual exclusion is implemented by the compiler, which should be less error pron
 
 When a thread calls a monitor procedure, which already has a thread inside, it queues and it sleeps until the current thread exits the monitor.
 
-![Monitor](imgs/3-44_monitors.png)
+![Monitor](../imgs/3-44_monitors.png)
 
 Examples of monitors:
 
-```
+``` C
 monitor example {
     int count;;
     procedure inc() {
@@ -327,10 +329,11 @@ Condition variables can only be used with the operations `wait` and `signal`.
 `x.wait()` means that the process invoking this operation is suspended until another process invokes. Another thread can enter the monitory while the original is suspended.  
 `x.signal()` resumes exactly **one** suspended process. If no process is suspended, then the `signal` operation has no effect.
 
-![Conditon variables in monitors](imgs/3-49_condition-var.png)
+![Conditon variables in monitors](../imgs/3-49_condition-var.png)
 
 Solution to producer-consumer problem using monitors and condition variables:
-```
+
+``` C
 monitor ProducerConsumer
     condition full, empty;
     integer count;
@@ -342,7 +345,7 @@ monitor ProducerConsumer
         count := count + 1;
         if count = 1 then signal(empty);
     end
-    
+
     procedure remove: integer;
     begin
         if count = 0 then wait(empty);
@@ -373,7 +376,7 @@ end;
 
 ## OS/161 Provided Synchronisation Primitives
 
-### Locks
+### Lock Functions
 
 ``` C
 // Functions to create and destroy locks:
@@ -387,6 +390,7 @@ void lock_release(struct lock *);
 ```
 
 Example use of locks:
+
 ``` C
 int count;
 struct lock *count_lock;
@@ -414,7 +418,7 @@ procedure dec() {
 
 If OS/161 cannot enter the critical section, it will put the thread to sleep until lock release is called, where it will allow one of the sleeping threads to enter the critical section
 
-### Semaphores
+### Semaphore Functions
 
 ``` C
 // create a semaphore by giving it a name and an initial value
@@ -452,7 +456,7 @@ procedure dec() {
 }
 ```
 
-### Condition Variable
+### Condition Variable Functions
 
 You can build a monitor-like design construct by using locks and condition variables
 
@@ -487,7 +491,7 @@ lock_release(c_lock);
 
 // solution
 lock_acquire(c_lock);
-while (count == 0)          // use while in case other threads have woken up 
+while (count == 0)          // use while in case other threads have woken up
     cv_wait(c_cv, c_lock);  // before you and made the count equal to 0
 remove_item();
 count--;
@@ -518,7 +522,7 @@ prod() {                            con() {
 
 ### Dining Philosophers
 
-Scenario: philosophers eat and think. When they eat they need 2 forks, but they can only pick up one fork at a time. If all philosophers pick up the fork on their right-hand side, they will be caught in a deadlock and starve to death. 
+Scenario: philosophers eat and think. When they eat they need 2 forks, but they can only pick up one fork at a time. If all philosophers pick up the fork on their right-hand side, they will be caught in a deadlock and starve to death.
 
 How do we prevent the deadlock?
 

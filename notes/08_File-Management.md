@@ -6,23 +6,23 @@ A brief history of file systems:
 
 Early batch processing systems had no OS, I/O from/to punch cards, tapes and drums for external storage, but not file system. There was rudimentary library support for reading/writing tapes and drums.
 
-![IBM 709](imgs/8-3_IBM709.png)
+![IBM 709](../imgs/8-3_IBM709.png)
 
 The first file systems were single-level (everything in one directory). Files were stored in contiguous chunks, where the maximal file size must be known in advance. Now you can edit a program and save it in a named file on the tape.
 
-![PDP-8 with DECTape](imgs/8-4_PDP-8.jpg)
+![PDP-8 with DECTape](../imgs/8-4_PDP-8.jpg)
 
 Time-sharing operating systems required full-fledged file systems. MULTICS used a multi-level directory structure, keeping file that belong to different users separately. It had acces control lists and symbolic links.
 
-![Honeywell 6180 running MULTICS](imgs/8-5_MULTICS.jpg)
+![Honeywell 6180 running MULTICS](../imgs/8-5_MULTICS.jpg)
 
 UNIX was based on ideas from MULTIX with a simple access control model; everything is a file.
 
-![PDP-7](imgs/8-6_PDP-7.png)
+![PDP-7](../imgs/8-6_PDP-7.png)
 
 ## Overview of File System Abstraction
 
-![file system overview](imgs/8-7_fs-overview.png)
+![file system overview](../imgs/8-7_fs-overview.png)
 
 ### Files
 
@@ -49,7 +49,7 @@ There is also **random access** where bytes/records can be read in any order. Th
 
 File attributes:
 
-![file attributes](imgs/8-12_file-attributes.png)
+![file attributes](../imgs/8-12_file-attributes.png)
 
 Typical file operations include:
 
@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
 Given an operating system supporting unstructured files that are a stream of bytes, how can we organise the contents of the file?  
 One such format is the Executable Linkable Format (ELF)
 
-![ELF](imgs/8-16_ELF.png)
+![ELF](../imgs/8-16_ELF.png)
 
 Some possible access patterns:
 
@@ -139,7 +139,7 @@ Things to consider when designing a file layout:
 
 File directories provide a mapping between file names and the files themselves. They contain information about file attributes, location, ownership etc. The directory itself is a file owned by the operating system.
 
-![directories](imgs/8-20_directories.png)
+![directories](../imgs/8-20_directories.png)
 
 Files can be located by following a path from the root, or master directory down various branches. This is the **absolute pathname** for a file. There can be several files with the same file name as long as they have unique path names.
 

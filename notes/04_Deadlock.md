@@ -60,9 +60,9 @@ We can model deadlock using directed graphs:
 * circles represent processes
 * squares represent resources
 
-![Deadlock modelling](imgs/4-9_deadlock-modelling.png)
+![Deadlock modelling](../imgs/4-9_deadlock-modelling.png)
 
-![Deadlock modelling 2](imgs/4-10_deadlock-model-avoidance.jpg)
+![Deadlock modelling 2](../imgs/4-10_deadlock-model-avoidance.jpg)
 
 ## Dealing with Deadlocks
 
@@ -77,7 +77,7 @@ Strategies for dealing with deadlocks:
 
 Pretend there is no problem. This is reasonable if deadlocks occur very rarely and the cost of prevention is high; e.g. only one process ones at a time. It is a trade-off between **convenience** (engineering approach) and **correctness** (mathematical approach)
 
-Windows and UNIX use this approach for some of the more complex resource relationships they manage. 
+Windows and UNIX use this approach for some of the more complex resource relationships they manage.
 
 ### Approach 2: Deadlock Prevention
 
@@ -89,7 +89,7 @@ Attacking the mutual exclusion condition is not feasible in general because some
 
 #### Hold and Wait Condition
 
-Attacking the hold and wait condition requires processes to request resources before starting so that a process never has to wait for what it needs. Issues with this are that 
+Attacking the hold and wait condition requires processes to request resources before starting so that a process never has to wait for what it needs. Issues with this are that
 
 * we may not know the required resources at the start of the process
 * ties up resources other processes could be using
@@ -122,7 +122,7 @@ This is not a viable option. If a process was allocated a printer and halfway th
 
 In this, we numerically order resources so that they must be accessed in a specific order. If a resource is not available, the process will simply have to wait.
 
-![Resource ordering](imgs/4-22_resource-ordering.png)
+![Resource ordering](../imgs/4-22_resource-ordering.png)
 
 #### Summary
 
@@ -141,7 +141,7 @@ For this, we need a method to determine if a system is deadlocked. Assuming the 
 
 We can detect deadlocks with one resource of each type via our deadlock modelling. A cycle can be found within the graph denoting a deadlock.
 
-![Deadlock detection](imgs/4-26_deadlock-detection.png)
+![Deadlock detection](../imgs/4-26_deadlock-detection.png)
 
 For resources with multiple units such as RAM, blocks on a hard disk drive and slots in a buffer, we can use data structures to detect deadlocks.
 
@@ -152,11 +152,11 @@ We keep track of:
 * resources currently allocated to process in a matrix
 * resources being requested by processes in a matrix
 
-![Multi-resource deadlock detection](imgs/4-28_multi-resource-deadlock-detection.png)
+![Multi-resource deadlock detection](../imgs/4-28_multi-resource-deadlock-detection.png)
 
 The sum of current resources allocated and resources available should equal the amount of resources in existence
 
-![Multi-resource equation](imgs/4-29_multi-resource-equation.png)
+![Multi-resource equation](../imgs/4-29_multi-resource-equation.png)
 
 The detection algorithm works like this:
 
@@ -168,7 +168,7 @@ Any remaining processes are deadlocked.
 
 Example: the algorithm terminates with no unmarked processes so there is no deadlock
 
-![Deadlock algorithm](imgs/4-32_deadlock-algorithm.jpg)
+![Deadlock algorithm](../imgs/4-32_deadlock-algorithm.jpg)
 
 #### Recovery
 
@@ -190,7 +190,7 @@ Here we have graph of two process resource trajectories, where
 the x axis represents the progress of process A  
 the y-axis represents the progress of process B
 
-![Process trajectories](imgs/4-45_process-trajectories.png)
+![Process trajectories](../imgs/4-45_process-trajectories.png)
 
 If the dotted line enters where the rectangles overlap, it will be in an **unsafe state**.
 
@@ -199,7 +199,7 @@ A state is **safe** if:
 * the system is not deadlocked
 * there exists a scheduling order that results in every process running to completion, _even if they all request their maximum resources immediately_
 
-![Safe/unsafe states](imgs/4-48_safe-unsafe-states.jpg)
+![Safe/unsafe states](../imgs/4-48_safe-unsafe-states.jpg)
 
 Unsafe states are not necessarily deadlocked; with a lucky sequence, all processes may complete. However, we **cannot guarantee** that they will complete (not deadlock).  
 Safe states guarantee we will eventually complete all processes.
@@ -215,7 +215,7 @@ The basic idea is that we want to keep the bank in a _safe_ state so all custome
 
 The Banker's algorithm for a single resource:
 
-![banker's algorithm for single resource](imgs/4-52_bankers-single.png)
+![banker's algorithm for single resource](../imgs/4-52_bankers-single.png)
 
 In (b) process B requests one more resource. To determine whether we should give it or not we get (c) and see that the state is no longer safe. As a result, process B does not get its requested resource.
 

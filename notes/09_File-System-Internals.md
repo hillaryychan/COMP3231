@@ -2,26 +2,26 @@
 
 UNIX storage stack:
 
-![UNIX storage stack](imgs/9-2_UNIX-storage-stack.jpg)
+![UNIX storage stack](../imgs/9-2_UNIX-storage-stack.jpg)
 
 Some popular file systems:
 
-![popular file systems](imgs/9-12_popular-file-systems.png)
+![popular file systems](../imgs/9-12_popular-file-systems.png)
 
 Why are there so many?
 
 * Different physical nature of storage devices
-  * Ext3 is optimised for magnetic disks
-  * JFFS2 is optimised for flash memory devices
-  * ISO9660 is optimised for CD-ROM
+    * Ext3 is optimised for magnetic disks
+    * JFFS2 is optimised for flash memory devices
+    * ISO9660 is optimised for CD-ROM
 * Different storage capacities
-  * FAT16 does not support drives >2GB
-  * FAT32 becomes inefficient on drives >32GB
-  * ZFS, Btrfs is designed to scale to multi-TB disk arrays
+    * FAT16 does not support drives >2GB
+    * FAT32 becomes inefficient on drives >32GB
+    * ZFS, Btrfs is designed to scale to multi-TB disk arrays
 * Different CPU and memory requirements
-  * FAT16 is not suitable for modern PCs but is a good fit for many embedded devices
+    * FAT16 is not suitable for modern PCs but is a good fit for many embedded devices
 * Proprietary standards
-  * NTFS may be a nice file system, but its specification is closed
+    * NTFS may be a nice file system, but its specification is closed
 
 ## File Systems for Magnetic Disks
 
@@ -35,7 +35,7 @@ We can see that mechanical delays introduce significant delays relative to the a
 
 ### Implementing a file system
 
-The file system must map symbolic file names into a collection of block addresses. It must keep track of 
+The file system must map symbolic file names into a collection of block addresses. It must keep track of
 
 * which blocks belong to which file
 * in which order the blocks form the file
@@ -43,13 +43,13 @@ The file system must map symbolic file names into a collection of block addresse
 
 Given a logical region of a file, the file system must track the corresponding block(s) on disk. This is stored in the file system metadata.
 
-![file system](imgs/9-15_file-system.png)
+![file system](../imgs/9-15_file-system.png)
 
 ### File Allocation Methods
 
 A file is divided into "blocks" - the unit of transfer to storage. Given the logical blocks of a file, we need a way to decide how and where to put the blocks on a disk.
 
-![file allocation](imgs/9-16_file-allocation.png)
+![file allocation](../imgs/9-16_file-allocation.png)
 
 ### External and Internal Fragmentation
 
@@ -73,7 +73,7 @@ Disadvantages:
 
 Examples: ISO 9660 (CDROM FS)
 
-![contiguous allocation](imgs/9-17_contiguous-allocation.png)
+![contiguous allocation](../imgs/9-17_contiguous-allocation.png)
 
 ### Dynamic Allocation Strategies
 
@@ -90,13 +90,13 @@ Disadvantages:
 * file blocks are scattered across the disk
 * complex metadata management (maintain the collection of blocks for each file)
 
-![dynamic allocation](imgs/9-18_dynamic-allocation.png)
+![dynamic allocation](../imgs/9-18_dynamic-allocation.png)
 
 #### Linked List Allocation
 
 In a **linked list** allocation, each block contains a pointer to the next block in the chain. Free blocks are also linked in the chain.
 
-![linked list allocation](imgs/9-20--linked-list-allocation.jpg)
+![linked list allocation](../imgs/9-20--linked-list-allocation.jpg)
 
 Advantages:
 
@@ -114,7 +114,7 @@ The **File Allocation Table (FAT)** method keeps a map of the entire file system
 
 The table is stored on the disk and is replicated in memory. This allows random access to be fast (following the in-memory disk)
 
-![FAT](imgs/9-22_fat.jpg)
+![FAT](../imgs/9-22_fat.jpg)
 
 Disadvantages:
 
@@ -124,7 +124,7 @@ Disadvantages:
 
 Example of file allocation table disk layout:
 
-![FAT disk layout](imgs/9-24_fat-disk-layout.png)
+![FAT disk layout](../imgs/9-24_fat-disk-layout.png)
 
 Note that there are two copies of FAT in case one of them every fails.
 
@@ -132,18 +132,18 @@ Note that there are two copies of FAT in case one of them every fails.
 
 The idea behind an **inode-based** file system structure is to have a separate table (index-node or i-node) for each file. We only keep the table for open files in memory, allowing fast random access. It is the most popular file system structure today.
 
-![inode fs](imgs/9-25_inode-fs.png)
+![inode fs](../imgs/9-25_inode-fs.png)
 
 i-nodes occupy one or several disk areas. In the example below, a portion of the hard disk is reserved for storing i-nodes.
 
-![inode disk occpation](imgs/9-26_inode-disk-occupation.png)
+![inode disk occpation](../imgs/9-26_inode-disk-occupation.png)
 
 i-nodes  are allocated dynamically, hence free-space management is required for i-nodes.  
 We use fix-sized i-nodes to simplify dynamic allocation. The i-node contains entries for file attributes, references to blocks of where file blocks are located and reserve the last i-node entry for a pointer (a block number) to an extension i-node. The extension i-node will contain block numbers for higher offsets of the file
 
 A diagram of i-node entries:
 
-![free space management](imgs/9-27_free-space-management1.png)
+![free space management](../imgs/9-27_free-space-management1.png)
 
 Free space management can be approached two ways:
 
@@ -155,7 +155,7 @@ We store in i-node entries other free blocks with the last entry pointing to the
 
 When we need to use free blocks, we go through entries of free blocks in the head of the free block list. When we reach the final entry, the head of the list becomes the next block containing a free block entries and we can use the current block as a free block.
 
-![approach 1](imgs/9-28_free-space-linked-list.png)
+![approach 1](../imgs/9-28_free-space-linked-list.png)
 
 In approach 2, individual bits in a bit vector flags used and free blocks.  
 A 16GB disk with 512 byte blocks will have a 4MB table.  
@@ -188,7 +188,7 @@ We can located files in a directory by using:
 
 #### Storing File Attributes
 
-![store file attributes](imgs/9-34_store-file-attr.png)
+![store file attributes](../imgs/9-34_store-file-attr.png)
 
 (a) disk addresses and attributes in a directory entry (e.g. FAT)  
 (b) directory in which each entry just refers to an i-node (e.g. UNIX)
@@ -202,4 +202,3 @@ Sequential access is easier for larger block sizes as fewer I/O operations are r
 For random access, the larger the block size, the more unrelated data we get loaded. Spatial locality of access is what improves the situation.
 
 Choosing an appropriate block size is a compromise.
-

@@ -5,7 +5,7 @@ Older systems only had a single file system. They had file system specific open,
 To support multiple file systems, we could change the file system code to understand different file system types. However this is prone to code bloat, complexity and in general being a non-solution.  
 Instead we can provide a framework that separates file system independent and file system dependent code. This allows different file systems to be 'plugged in'. This is basically a **virtual file system**
 
-![VFS](imgs/10-6_vfs.jpg)
+![VFS](../imgs/10-6_vfs.jpg)
 
 ## Virtual File System (VFS)
 
@@ -16,7 +16,7 @@ VFS can be thought of as an indirection layer for system calls (i.e. between the
 
 The file system independent code deals with VFS and vnodes
 
-![vfs and vnodes](imgs/10-9_vfs-and-vnodes.png)
+![vfs and vnodes](../imgs/10-9_vfs-and-vnodes.png)
 
 ### VFS Interface
 
@@ -25,4 +25,4 @@ The VFS interface has two major data tables:
 * VFS - represents all file system types. It contains pointers to functions to manipulate each **file system** as a whole (e.g. mount, unmount) forming a standard interface to the file system
 * vnode - represents a file (inode) in the underlying file system and points to the real inode. It also contains pointers to functions to manipulate **files/nodes** (e.g. open, close, read, write etc.)
 
-![VFS and vnode structures](imgs/10-10_vfs-vnode-structures.jpg)
+![VFS and vnode structures](../imgs/10-10_vfs-vnode-structures.jpg)

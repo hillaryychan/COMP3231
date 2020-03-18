@@ -1,6 +1,6 @@
 # System Calls
 
-![Structure of a computer system](imgs/6-4_computer-system-structure.png)
+![Structure of a computer system](../imgs/6-4_computer-system-structure.png)
 
 **System calls** can be viewed as special function calls that provide a controlled entry into the kernel. While in the kernel, they perform a privileged operation and return to the original caller with the result. They restrict possible entry points to secure locations to prevent entering after any security checks.  
 The system call interface represents the abstract machine provided by the operating system.
@@ -52,7 +52,7 @@ while (TRUE) {                              // repeat forever
 
 Some Win32 API calls and their equivalent UNIX syscalls:
 
-![Win32 API calls](imgs/6-10_win32-api-calls.png)
+![Win32 API calls](../imgs/6-10_win32-api-calls.png)
 
 ## System Call Implementation
 
@@ -63,22 +63,22 @@ A simple model of CPU computation uses the **fetch-execute cycle**.
 3. increment PC
 4. repeat
 
-![fetch-execute cycle](imgs/6-12_fetch-execute.png)
+![fetch-execute cycle](../imgs/6-12_fetch-execute.png)
 
 There is/are also
 
 * stack pointer (SP)
 * status register for condition codes
-  * positive result
-  * zero result
-  * negative result
+    * positive result
+    * zero result
+    * negative result
 * general purpose registers, which hold operands of most instructions and enables programmers (compilers) to minimise memory references
 
 In privileged-mode operation, to protect the operating system execution, two or more CPU modes of operation exist;  
 **Privileged mode** (or **system/kernel-mode**), where all instructions and registers are available  
 **User-mode**, which uses and can only access 'safe' subset of the instruction set. It only affects the state of the application itself and cannot be used to uncontrollable interfere with the OS
 
-![cpu registers](imgs/6-14_cpu-registers.jpg)
+![cpu registers](../imgs/6-14_cpu-registers.jpg)
 
 An example of an _unsafe_ instruction would be the `cli` instruction on the x86 architecture, which disables interrupts. An example exploit:
 
@@ -88,15 +88,15 @@ while (true)
     /* loop forever */
 ```
 
-The accessibility of addresses within an address space changes depending on the operating mode (to protect kernel code and data). Note that the exact memory ranges are usually configurable and vary between CPU architectures and/or operating systems 
+The accessibility of addresses within an address space changes depending on the operating mode (to protect kernel code and data). Note that the exact memory ranges are usually configurable and vary between CPU architectures and/or operating systems
 
-![accessible memory space](imgs/6-16_accessible-memory-space.png)
+![accessible memory space](../imgs/6-16_accessible-memory-space.png)
 
 ### System Call Mechanism Overview
 
 When a system call is made the syscall mechanism securely transfers from user execution to kernel execution and back.
 
-![syscall diagram](imgs/6-17_syscall-diagram.jpg)
+![syscall diagram](../imgs/6-17_syscall-diagram.jpg)
 
 System call transitions are triggered by special processor instructions.  
 From user to kernel via a system call instruction  
@@ -105,23 +105,23 @@ from kernel to user via a return from a privileged mode instruction
 During a system call:
 
 * the processor mode
-  * switched from user-mode to kernel-mode
-  * switched back when returning to user-mode
+    * switched from user-mode to kernel-mode
+    * switched back when returning to user-mode
 * the stack pointer (SP)
-  * user-level SP is saved and kernel SP is initialised
-  * user-level SP is restored when returning to user-mode
+    * user-level SP is saved and kernel SP is initialised
+    * user-level SP is restored when returning to user-mode
 * the program counter (PC)
-  * user-level PC is saved and PC is set to kernel entry point
-  * user-level PC is restored when returning to user-level
-  * kernel entry via designated entry point must be strictly enforced
+    * user-level PC is saved and PC is set to kernel entry point
+    * user-level PC is restored when returning to user-level
+    * kernel entry via designated entry point must be strictly enforced
 * registers
-  * set at user-level to indicate the system call type and its arguments; this is a convention between applications and the kernel
-  * some registers are preserved at user-level or kernel level in order to restart user-level execution; this depends on the language calling convention etc.
-  * result of the system call is placed in registers when returning to user-level; another convention
+    * set at user-level to indicate the system call type and its arguments; this is a convention between applications and the kernel
+    * some registers are preserved at user-level or kernel level in order to restart user-level execution; this depends on the language calling convention etc.
+    * result of the system call is placed in registers when returning to user-level; another convention
 
 Steps in making a system call:
 
-![Steps in making a syscall](imgs/6-23_steps-in-making-a-syscall.png)
+![Steps in making a syscall](../imgs/6-23_steps-in-making-a-syscall.png)
 
 ### MIPS R2000/R3000
 
@@ -132,30 +132,30 @@ The processor control registers are located in CP0. It contains exception/interr
 CP0 Registers:
 
 * Exception Management
-  * `c0_cause` **stores the cause of the recent exception**
-  * `c0_status` **stores the current status of the CPU**
-  * `c0_epc` **stores the address of the instruction that caused the exception**
-  * `c0_baddvaddr` stores the address accessed that caused the exception
+    * `c0_cause` **stores the cause of the recent exception**
+    * `c0_status` **stores the current status of the CPU**
+    * `c0_epc` **stores the address of the instruction that caused the exception**
+    * `c0_baddvaddr` stores the address accessed that caused the exception
 * Miscellaneous
-  * `c0_prid` stores the process identifier
+    * `c0_prid` stores the process identifier
 * Memory Management
-  * `c0_index`
-  * `c0_random`
-  * `c0_entryhi`
-  * `c0_entrylo`
-  * `c0_context`
+    * `c0_index`
+    * `c0_random`
+    * `c0_entryhi`
+    * `c0_entrylo`
+    * `c0_context`
 
 For now we will only focus on the registers in **bold**. We will look at the other ones later
 
-![CP0 registers](imgs/6-26_cp0-registers.jpg)
+![CP0 registers](../imgs/6-26_cp0-registers.jpg)
 
 ### Hardware Exception Handling
 
-![hardware exception handling](imgs/6-35_hardware-exception-handling.jpg)
+![hardware exception handling](../imgs/6-35_hardware-exception-handling.jpg)
 
 For now we will ignore how the exception is actually handled and how user-level registers are preserved. We will simply look at how we return from the exception.
 
-![Returning from an exception](imgs/6-42_returning-from-exception.jpg)
+![Returning from an exception](../imgs/6-42_returning-from-exception.jpg)
 
 ## MIPS System Calls
 
@@ -174,11 +174,11 @@ OS/161 uses the following conventions:
 if successful, register `a3` contains `0` on return
 if unsuccessful, `v0` has the error number, which is stored in `errno` and `-1` is returned in `v0`
 
-![register conventions](imgs/6-48_register-conventions.png)
+![register conventions](../imgs/6-48_register-conventions.png)
 
 Here is a walk through of a user-level system call, calling `read()`
 
-![Read syscall walkthrough](imgs/6-50_read_walkthrough.jpg)
+![Read syscall walkthrough](../imgs/6-50_read_walkthrough.jpg)
 
 From the caller's perspective, the `read()` system call behaves like a normal function. It preserves the calling convention of the language. However the actual function implements its own convention by agreement with the kernel. Our OS/161 example assumes the kernel preserves appropriate registers (`s0-s8`, `sp`, `gp` `ra`). Most languages has similar _libraries_ that interface with the operating system.
 
@@ -196,8 +196,8 @@ On the kernel side of the system call:
 
 Note: the following code is from the uniprocessor variant of 0S161 (v1.x). It is simpler but broadly similar to the current version
 
-![0S161 exception handling](imgs/6-60_os161-exception-handling.jpg)
+![0S161 exception handling](../imgs/6-60_os161-exception-handling.jpg)
 
 After this, the kernel deals with whatever causes the exception; a syscall, interrupt, page fault etc. and potentially modifies the _trapframe_. `mips_trap` eventually returns
 
-![OS161 exception return](imgs/6-71_os161-exception-return.jpg)
+![OS161 exception return](../imgs/6-71_os161-exception-return.jpg)

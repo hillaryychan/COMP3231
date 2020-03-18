@@ -9,7 +9,7 @@ There is a memory hierarchy where going down the hierarchy, there is
 * increasing access time
 * (hopefully) decreasing frequency of access to the memory by the processor (based on the principle of locality)
 
-![Memory hierarchy](imgs/7-4_memory-heirarchy.png)
+![Memory hierarchy](../imgs/7-4_memory-heirarchy.png)
 
 ## Caching
 
@@ -17,26 +17,26 @@ Given two levels of data storage: small and fast vs. large and slow, we can spee
 
 A hardware approach to improving system performance is by using cache memory (SRAM)
 
-![caching](imgs/7-6_caching.png)
+![caching](../imgs/7-6_caching.png)
 
-![cpu cache](imgs/7-7_cpu-cache.png)
+![cpu cache](../imgs/7-7_cpu-cache.png)
 
 CPU cache is fast memory placed between the CPU and main memory with 1 to a few cycles access time compared to RAM access time of tens to hundreds of cycles. It holds recently used data or instructions to save memory accesses. The CPU cache matches slow RAM access time to CPU speed if it has a high hit rate. It is hardware maintained and (mostly) transparent to software. The size of the cache ranges from a few kB to tens of MB. There is usually a hierarchy of caches (2-5 levels), on- and off-chip.
 
 The effective access time of memory subsystem depends on the hit rate in the first level.
 
-![effective access time](imgs/7-9_effective-access-time.png)
+![effective access time](../imgs/7-9_effective-access-time.png)
 
 Example:  
 cache memory access time is 1ns  
 main memory access time is 10ns  
 hit rate is 95%
 
-![effective access time example](imgs/7-10_access-time-example.png)
+![effective access time example](../imgs/7-10_access-time-example.png)
 
 ### Moving Disk Head Mechanism
 
-![Moving disk head diagram](imgs/7-11_moving-disk-head-mechanism.png)
+![Moving disk head diagram](../imgs/7-11_moving-disk-head-mechanism.png)
 
 Disk can read/write data relatively fast; 15,000rpm drive - 80MB/sec; 1KB block is read in12 microseconds.  
 Access time is dominated by the time to late the head over data:
@@ -48,12 +48,12 @@ Access time is dominated by the time to late the head over data:
 
 An OS approach to improving system performance is by using main memoy (DRAM)
 
-![DRMA](imgs/7-13_DRAM.png)
+![DRMA](../imgs/7-13_DRAM.png)
 
 The strategy is to avoid waiting for disk access by keeping a subset of the disk's data in main memory. The OS uses main memory as a **cache** of disk contents.
 
 An application approach to improving system performance is to store data retrieved from the Internet on your local hard disk:
 
-![Improving application performace](imgs/7-15_internet-hard-disk.png)
+![Improving application performace](../imgs/7-15_internet-hard-disk.png)
 
 The strategy is to avoid waiting for Internet access by keeping a subset  of the Internet's data on disk so that the application uses the disk as a cache of the Internet
