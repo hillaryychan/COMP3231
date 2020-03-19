@@ -31,11 +31,11 @@ ext2 inodes contain:
 * size - the offset of the **highest byte** written
 * block count - the number of disk blocks used by the file. Note: that the number of blocks can be much less than expected given the file size. Files can be sparsely populated  
 e.g. `write(f, "hello");lseek(f,1000000);write(f,"world");` only needs to store the start and end of the file, not all the empty blocks in between; so `size=1000005` and `blocks=2+any indirect blocks`
-* reference count - see hard links
-* direct blocks - see below
-* single indirect - see below
-* double indirect - see below
-* triple indirect - see below
+* reference count - see [hard links](#hard-links)
+* direct blocks - see [below](#unix-inode-block-addressing-scheme)
+* single indirect - see [below](#unix-inode-block-addressing-scheme)
+* double indirect - see [below](#unix-inode-block-addressing-scheme)
+* triple indirect - see [below](#unix-inode-block-addressing-scheme)
 
 ### Unix Inode Block Addressing Scheme
 
@@ -206,4 +206,51 @@ ext2's optimisations:
 
 Directories translate names to inode numbers. Directory entries are of variable length and entries can be deleted in place by having a special inode number, `0`, to mean "there is nothing here".
 
+Suppose our directory contains the following:
+
+![Example directory](../imgs/11-41_example-dir.png)
+
+### Hard Links
+
+Inodes can have more than one name. This is known as having a **hard link**.
+
+In our sample directory, inode 7 has three names; "f1", "file2" and "f3" all refer to inode 7.
+
+![hard links](../imgs/11-42_hard-links.png)
+
+We can have many names for the same inode. A count of references (the **reference count**) is kept in the inode.  
+Adding a name (directory entry) referring to the inode increments the count and removing a name decrements the count. If the reference count is 0, then we have no names for the inode (it is unreachable) and we can delete the inode (i.e. the underlying file or directory)
+
+When an inode has a positive reference count, the inode with still _exist_ despite one of its references being deleted.
+
+![hard link deletion](../imgs/11-44_hard-link-deletion.png)
+
+### Symbolic Links
+
+A **symbolic link** or **symlink** is a file that contains a reference to another file or directory.
+
+It has its own inode and data block, which contains a path to the target file. A symlink is marked by a special file attribute, is transparent for some operations and can point across file system boundaries. 
+
+Symlinks can contain paths to other symlinks essentially creating a linked list. Issues arise when a cyclical list is created or when a stored path is invalid. To deal with an endless path lookup a symlink lookup limit is imposed.
+
+### Deleting a Filename
+
+When deleting a file name (e..g `rm file2`), we adjust the record length to skip to the next valid entry
+
+![file deletion](../imgs/11-46_ext2fs-file-deletion.jpg)
+
 ## File System Reliability
+
+In ext2, disk writes are buffered in RAM, so an OS crash or power outrage results in lost data.  
+ext2 commits writes to the disk periodically (e..g every 30 seconds) and uses the `sync` command to force a file system flush. The file system operations are non-atomic, so a incomplete transaction can leave the file system in an inconsistent state.
+
+Let us go through an example where we try to find the optimal order of actions for deleting an file to deal with an operating system crash.
+
+![crash deletion ordering](../imgs/11-49_crash-deletion-ordering.jpg)
+
+It turns out there is no good ordering. :(
+
+When the file system realises it has had an unclean unmount, it uses e2fsck to scan the disk and attempt to restore file system invariants. However this is inefficient.
+
+A solution to this is journaling file systems like ext3.  
+It keeps a journal of file system updates. Before performing and atomic update sequence, it writes it to the journal. On an unclean shutdown, it replays the last journal entries
