@@ -41,7 +41,7 @@ e.g. `write(f, "hello");lseek(f,1000000);write(f,"world");` only needs to store 
 
 Direct blocks store the block numbers of the first 12 blocks in the file; we can find the blocks _directly_ from the inode
 
-![direct blocks](imgs/11-11_direct-blocks.jpg)
+![direct blocks](../imgs/11-11_direct-blocks.jpg)
 
 We store offsets greater than the 12 blocks using indirection.
 
