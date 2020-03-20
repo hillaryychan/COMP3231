@@ -60,7 +60,8 @@ Example: assume we have 8 byte blocks, containing 4 byte block numbers. So we ca
 
 ![Indirection example](../imgs/11-19_indirection-example.png)
 
-Example: assume we have 4 byte block numbers and 1K blocks.  
+Example: assume we have 4 byte block numbers and 1K blocks.
+
 ``` txt
 The number of addressable blocks is  
 direct blocks = 12  
@@ -75,7 +76,7 @@ Assume we have 4K blocks, 4 byte block numbers and 12 direct blocks
 
 ``` C
 // A 1 byte file is produced by
-lseek(fd, 1048576, SEEK_SET); /* 1 megabyte */ 
+lseek(fd, 1048576, SEEK_SET); /* 1 megabyte */
 write(fd, "x", 1);
 
 // Then we add
@@ -229,7 +230,7 @@ When an inode has a positive reference count, the inode with still _exist_ despi
 
 A **symbolic link** or **symlink** is a file that contains a reference to another file or directory.
 
-It has its own inode and data block, which contains a path to the target file. A symlink is marked by a special file attribute, is transparent for some operations and can point across file system boundaries. 
+It has its own inode and data block, which contains a path to the target file. A symlink is marked by a special file attribute, is transparent for some operations and can point across file system boundaries.
 
 Symlinks can contain paths to other symlinks essentially creating a linked list. Issues arise when a cyclical list is created or when a stored path is invalid. To deal with an endless path lookup a symlink lookup limit is imposed.
 

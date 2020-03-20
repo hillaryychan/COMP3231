@@ -87,6 +87,7 @@ int vfs_getcwd(struct uio *buf);
 ```
 
 Example: OS/161 emufs vnode ops
+
 ``` C
 /*
  * Function table for emufs files
