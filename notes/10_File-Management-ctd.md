@@ -65,7 +65,8 @@ struct vnode_ops {
     int (*vop_rename) (struct vnode *dir, const char *name);
 
     int (*vop_lookup) (struct vnode *dir, char *pathname, struct vnode **result);
-    int (*vop_lookparent) (struct vnode *dir, char *pathname, struct vnode **result, char *buf, size_t len);
+    int (*vop_lookparent) (struct vnode *dir, char *pathname,
+                           struct vnode **result, char *buf, size_t len);
 };
 ```
 
