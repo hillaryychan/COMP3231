@@ -139,24 +139,24 @@ Each open file has a **file descriptor**. `read`, `write` `lseek` etc use them t
 **Option 1:** Use vnode numbers as file descriptors and add a file pointer to the vnode.  
 **Problems:** when we concurrently open the same file twice, we should get two separate file descriptors and file pointers, but we don't.
 
-![FD mapping 3](../imgs/10-23_fd-mapping2.png)
-
 **Option 2:** Have a single global open file array, where the `fd` is an index in the array and each entry contains a file pointer (`fp`) and a pointer to a vnode (`v-ptr`).  
 **Problems:** The file descriptor for `stdout` is 1. `stdout` is the console for some processes and a file for others. This means that entry 1 needs to be different per process.
 
-![FD mapping 3](../imgs/10-25_fd-mapping3.png)
+![FD mapping 2](../imgs/10-23_fd-mapping2.png)
 
 **Option 3:** Each process has its own open file array.  
 Each index contains a `fp` and `v-ptr`. File descriptor 1 can point to any vnode for each processes (i.e. console, a log file etc.)  
 **Problems:** `fork()` defines that the child shares the file pointer with the parent. `dup2()` also defines the file descriptors share the file pointer. With the per-process table, we can only have **independent** file pointers, even when accessing the same file.
 
-![FD mapping 4](../imgs/10-27_fd-mapping4.png)
+![FD mapping 3](../imgs/10-25_fd-mapping3.png)
 
 **Option 4:** Have a per-process file descriptor table with a global open file table.  
 The per-process file descriptor array contains pointers to an open file table entry.  
 The open file table array contains entries with an `fp` and `v-ptr`.  
 This provides shared file pointers if required and independent file pointers if required.  
 E.g. All three file descriptors refer to the same file, two share a file pointer, one has an independent file pointer.
+
+![FD mapping 4](../imgs/10-27_fd-mapping4.png)
 
 Option 4 is used by Linux and most other Unix operating systems.
 
