@@ -16,24 +16,24 @@
 
 **Q6.** Assume an inode with 10 direct blocks, as well as single, double and triple indirect block pointers. Taking into account creation and accounting of the indirect blocks themselves, what is the largest possible number of block reads and writes in order to:
 
-    a. Read 1 byte  
-    b. Write 1 byte  
+  a. Read 1 byte  
+  b. Write 1 byte  
 
 Assume the inode is cached in memory.
 
 **Q7.** Assume you have an inode-based filesystem. The filesystem has 512 byte blocks. Each inode has 10 direct, 1 single indirect, 1 double indirect, and 1 triple indirect block pointer. Block pointers are 4 bytes each. Assume the inode and any block free list is always in memory. Blocks are not cached.
 
-    a. What is the maximum file size that can be stored before  
-        1. the single indirect pointer is needed?
-        2. the double indirect pointer is needed?
-        3. the triple indirect pointer is needed?
-    b. What is the maximum file size supported?
-    c. What is the number of disk block reads required to read 1 byte from a file
-        in the best case?
-        in the worst case?
-    d. What is the number of disk block reads and writes required to write 1 byte to a file
-        1. in the best case?
-        2. in the worst case?
+  a. What is the maximum file size that can be stored before  
+    1. the single indirect pointer is needed?
+    2. the double indirect pointer is needed?
+    3. the triple indirect pointer is needed?
+  b. What is the maximum file size supported?
+  c. What is the number of disk block reads required to read 1 byte from a file
+    1.  in the best case?
+    2. in the worst case?
+  d. What is the number of disk block reads and writes required to write 1 byte to a file
+    1. in the best case?
+    2. in the worst case?
 
 **Q8.** A typical UNIX inode stores both the file's size and the number of blocks currently used to store the file. Why store both? Should not blocks = size / block size?
 
