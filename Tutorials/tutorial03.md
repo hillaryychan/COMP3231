@@ -682,12 +682,12 @@ It's livelock. Allow each process to lock the disk and issue both commands toget
 **Q10.** Describe four ways to prevent deadlock by attacking the conditions required for deadlock.
 
 * mutual exclusion condition
-  * make resource shareable; i.e allow concurrent access to read-only file. However, in general some resources are not shareable and require mutual exclusion
+    * make resource shareable; i.e allow concurrent access to read-only file. However, in general some resources are not shareable and require mutual exclusion
 * hold-and-wait condition
-  * dictate only a single resource can be held at any time; not practical
-  * require that all required resources be obtained initially. If the resource is not available, all held resources must be released before trying again; prone to livelock
+    * dictate only a single resource can be held at any time; not practical
+    * require that all required resources be obtained initially. If the resource is not available, all held resources must be released before trying again; prone to livelock
 * no pre-emption condition
-  * pre-empt the resource; not always possible
+    * pre-empt the resource; not always possible
 * circular wait condition - order the resource numerically and request them in numerical order
 
 **Q11.** Answer the following questions about the tables.
@@ -755,6 +755,5 @@ p5           0      3      3      2      0      6      5      2      0      3   
 
   3. Which processes, if any, are or may become deadlocked if the request is granted immediately?  
   p2 and p3
-
 
 Page last modified: 10:21pm on Thursday, 27th of February, 2020

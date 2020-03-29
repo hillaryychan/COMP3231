@@ -265,10 +265,10 @@ They are numbers used as a sanity check to validate an elf file. Numbers are loc
 
 ``` C
 /* For e_ident[EI_MAG0..3] */
-#define	ELFMAG0         0x7f
-#define	ELFMAG1         E'
-#define	ELFMAG2         L'
-#define	ELFMAG3         F'
+#define ELFMAG0         0x7f
+#define ELFMAG1         E'
+#define ELFMAG2         L'
+#define ELFMAG3         F'
 ```
 
 **15.** In `runprogram()`, why is it important to call `vfs_close` before going to usermode?
@@ -325,7 +325,7 @@ This section is mostly related to the advanced version, but is still generally i
 
 The userland C startup code. There's only one file in here, mips/crt0.S, which contains the MIPS assembly code that receives control first when a user-level program is started. It calls main(). This is the code that your execv() implementation will be interfacing to, so be sure to check what values it expects to appear in what registers and so forth.
 
-#### `userland/lib/libc`:
+#### `userland/lib/libc`
 
 There's obviously a lot of code in the OS/161 C library (and a lot more yet in a real system's C library...) We don't expect you to read it all, although it may be instructive in the long run to do so. Job interviewers have an uncanny habit of asking people to implement simple standard C functions on the whiteboard. For present purposes you need only look at the code that implements the user-level side of system calls.
 

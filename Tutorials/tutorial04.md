@@ -254,12 +254,14 @@ Preemptive multithreading enforces regular (at least systematic) allocation of C
 **Q6.** Describe user-level threads and kernel-level threads. What are the advantages or disadvantages of each approach?
 
 User-level threads are implemented in the application (usually in a "thread library"). The thread management structures (Thread Control Blocks) and scheduler are contained within the application. The kernel has no knowledge of the user-level threads.  
-+ faster to create, destroy, manage, block and activate (no kernel entry and exit required)  
-- if a single user-level thread **blocks** in the kernel, the whole process is blocked. However, some libraries (e.g. most UNIX pthreads libraries) avoid blocking in the kernel using non-blocking system call variants to emulate the blocking calls.  
-- do not take advantage of parallelism available on multiple CPU-machines
+
+**+** faster to create, destroy, manage, block and activate (no kernel entry and exit required)  
+**-** if a single user-level thread **blocks** in the kernel, the whole process is blocked. However, some libraries (e.g. most UNIX pthreads libraries) avoid blocking in the kernel using non-blocking system call variants to emulate the blocking calls.  
+**-** do not take advantage of parallelism available on multiple CPU-machines
 
 Kernel threads are implemented in the kernel. The TBCs are managed by the kernel, the thread scheduler is the normal in-kernel scheduler.
-+ kernel threads are usually preemptive, user-level threads are usually cooperative (Note: some user level threads use alarms or timeouts to provide a tick for preemptions)
+
+**+** kernel threads are usually preemptive, user-level threads are usually cooperative (Note: some user level threads use alarms or timeouts to provide a tick for preemptions)
 
 **Q7.** A web server is constructed such that it is multithreaded. If the only way to read from a file is a normal blocking read system call, do you think user-level threads or kernel-level threads are being used for the web server? Why?
 
@@ -342,6 +344,5 @@ Note: In the table below, almost everything that is not the timer device or CPU 
 | Kernel                        | Restores the user registers from the stack                            |
 | Kernel                        | Set the processor back to user mode                                   |
 | Kernel                        | Jumps to the new user process' PC                                     |
-
 
 Page last modified: 4:38pm on Thursday, 5th of March, 2020
