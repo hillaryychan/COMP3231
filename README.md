@@ -2,7 +2,7 @@
 
 1. [Overview](https://github.com/hillaryychan/COMP3231/blob/master/notes/01_Overview.md)
 2. [Processes and Threads](https://github.com/hillaryychan/COMP3231/blob/master/notes/02_Processes-and-Threads.md)
-    1. [Implementation](https://github.com/hillaryychan/COMP3231/blob/master/notes/05_Processes-and-Threads-Impl.md)
+    1. [Processes and Threads Implementation](https://github.com/hillaryychan/COMP3231/blob/master/notes/05_Processes-and-Threads-Impl.md)
     2. [System Calls](https://github.com/hillaryychan/COMP3231/blob/master/notes/06_System-Calls.md)
 3. Concurrency and Deadlock
     1. [Concurrency and Synchronisation](https://github.com/hillaryychan/COMP3231/blob/master/notes/03_Concurrency-and-Synchronisation.md)
@@ -12,9 +12,10 @@
     2. [File Management I](https://github.com/hillaryychan/COMP3231/blob/master/notes/08_File-Management.md)
     3. [File System Internals](https://github.com/hillaryychan/COMP3231/blob/master/notes/09_File-System-Internals.md)
     4. [File Management II](https://github.com/hillaryychan/COMP3231/blob/master/notes/10_File-Management-ctd.md)
-5. [Scheduling]()
-6. [I/O]()
-7. [Multiprocessors]()
-8. [Memory and Virtual Memory Management]()
+5. [Memory and Virtual Memory Management](https://github.com/hillaryychan/COMP3231/blob/master/notes/13_Memory-Management.md)
+6. [Scheduling]()
+7. [I/O]()
+8. [Multiprocessors]()
 9. Case Study
     1. [ext2 File System](https://github.com/hillaryychan/COMP3231/blob/master/notes/11_Case-Study:ext2.md)
+    2. [ext3 File System](https://github.com/hillaryychan/COMP3231/blob/master/notes/12_Case-Study:ext3.md)
