@@ -6,18 +6,34 @@
 
 **Q1.** Why does Linux pre-allocate up to 8 blocks on a write to a file.
 
+Pre-allocating improves the **locality** of the file. The 8 blocks cannot be taken by any other file.
+
 **Q2.** Linux uses a buffer cache to improve performance. What is the drawback of such a cache? In what scenario is it problematic? What alternative would be more appropriate where a buffer cache is inappropriate?
+
+Drawbacks when power cuts out or disk gets removed before you can write to it.  
+Any removable storage should have data written straight to the disk when needed.  
+An alternative would be a **write-through** system/cache
 
 **Q3.** What is the structure of the contents of a directory? Does it contain attributes such as creation times of files? If not, where might this information be stored?
 
+Directory stores name, inode, type of file. All the other information is stored on the inode itself, which is somewhere on the disk
+
 **Q4.** The Unix inode structure contains a reference count. What is the reference count for? Why can't we just remove the inode without checking the reference count when a file is deleted?
 
+Reference counts stores how many entries are 'pointing' to this inode. Can't remove it because things are still 'using' it.
+
 **Q5.** Inode-based filesystems typically divide a file system partition into block groups. Each block group consists of a number of contiguous physical disk blocks. Inodes for a given block group are stored in the same physical location as the block groups. What are the advantages of this scheme? Are they any disadvantages?
+
+Files need to be stored in a specific block group. This improves locality and provides easy access to data blocks.  
+Disadvantage: replicating the superblock -> redundancy, possible to have external fragmentation, the maximum size of a file is reduced as it needs to fit in one superblock
 
 **Q6.** Assume an inode with 10 direct blocks, as well as single, double and triple indirect block pointers. Taking into account creation and accounting of the indirect blocks themselves, what is the largest possible number of block reads and writes in order to:
 
   a. Read 1 byte  
+  4 reads
   b. Write 1 byte  
+  4 reads, 1 write  
+  other worse cases include indirection blocks not existing
 
 Assume the inode is cached in memory.
 
@@ -37,7 +53,11 @@ Assume the inode is cached in memory.
 
 **Q8.** A typical UNIX inode stores both the file's size and the number of blocks currently used to store the file. Why store both? Should not blocks = size / block size?
 
+file size is just the highest offset of the file, while blocks is the physical locations of where files are written.
+
 **Q9.** How can deleting a file leave a inode-based file system (like ext2fs in Linux) inconsistent in the presence of a power failure.
+
+You need to remove the directory, fix free inode bitmaps and free datablock bitmaps
 
 **Q10.** How does adding journalling to a file system avoid corruption in the presence of unexpected power failures.
 
