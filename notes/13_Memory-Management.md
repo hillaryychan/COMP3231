@@ -135,4 +135,68 @@ The logical addresses can be bound to physical memory at:
 * **load time** - the compiler generates _relocatable_ code. The loader binds the address at load time
 * **run time** - logical compile-time addresses are translated to physical addresses by _special hardware_
 
-#### Hardware Support for Runtime Binding and Protection
+##### Hardware Support for Runtime Binding and Protection
+
+For process B to run using logical addresses, process B expects to access addresses from 0 to some limit of memory size. We need to add an appropriate offset to its logical adddress to achieve relocation and protect memory "lower" than B. We must also limit the maximum logical address B can generate to protect memory "higher" than B.
+
+![using logical addresses](../imgs/13-38_logical-addr.jpg)
+
+To deal with this we have **base and limit registers** (also called **base and bound registers** and **relocation and limit registers**. Base and limit registers restrict and relocate the currently active process. Base and limit registers must be changes at load time, relocation (compaction time) or on a context switch.
+
+![base and limit registers](../imgs/13-41_base-and-limit-registers.jpg)
+
+Pros include:
+
+* it supports protected multi-processing/multi-tasking
+
+Cons include:
+
+* physical memory allocation must still be contiguous
+* the entire process must be in memory
+* does not support spatial sharing of address space; no shared code, libraries, or data structures between processes
+
+### Swapping
+
+So far, we have a system suitable for a batch system; limited number of dynamically allocated processes enough to keep the CPU utilised; relocated at runtime; protected from each other.
+
+We need more than just a small number of processes running at once. We need to support a mix of active and inactive processes of varying longevity
+
+A process can be **swapped** temporarily out of memory to a **backing store** and then brought back into memory for continued execution.  
+The **backing store** is a fast disk large enough to accommodate copies of all memory images for all users. It must provide direct access to these memory images.  
+We can prioritised processes; lower-priority processes can be swapped out so that a higher-priority process can be loaded and executed.  
+A major part of swap time is transfer time; the total transfer time is directly proportional to the _amount_ of memory swapped.
+
+A schematic view of swapping:
+
+![schematic view of swappng](../imgs/13-45_swapping-schematic-view.png)
+
+## Virtual Memory
+
+**Virtual memory** was developed to address the issues identified with the simple schemes covered so far. There are two variants; paging and segmentation. Paging is now the dominant one of the two. Some architectures support hybrids of the two schemes; e.g. Intel 1A-32 (32-bit x86)
+
+### Paging
+
+In paging we partition physical memory into small equal sized chunks called **_frames_**. We divide each process' virtual (logical) address space into same sized chunks called **_pages_**. Virtual memory addresses consist of a _page number_ and _offset within the page_.
+
+The operating system maintains a **page table**, which contains the frame location for each page. It is used by _hardware_ to translate each virtual address to a physical address. The relation between virtual addresses and physical memory addresses is given by the page table.
+
+In paging the process' physical memory does **not** have to be contiguous.
+
+![page table](../imgs/13-48_page-table.png)
+
+The assignment of process pages to free frames:
+
+![page assignment](../imgs/13-49_page-assignment.jpg)
+
+Paging has no external fragmentation, although it will have a small amount of internal fragmentation (especially for the last page). It allows sharing by _mapping_ several pages to the same frame. Paging abstracts physical organisation since the programmer only deals with virtual addresses. There is minimal support for logical operations since each unit if one or more pages.
+
+### Memory Management Unit (MMU)
+
+The **Memory Management Unit (MMU)** is also called **Translations Look-aside Buffer (TLB)**
+It is connected to the CPU, which sends virtual addresses to the MMU. The MMU translates the given logical addresses to physical address in memory.
+
+![MMU Location](../imgs/13-52_MMU-loc.png)
+
+MMU Operation:
+
+![MMU operation](../imgs/13-53_MMU-operation.png)
