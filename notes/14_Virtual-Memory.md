@@ -30,7 +30,7 @@ If we access non-resident memory, we will get a **page fault**. This occurs when
 Broadly there are two standard page fault types:
 
 * **illegal address** (protection error) - signals or kills the process
-* **page not resident** - will get an empty frame, loads the page, updates the page (translation) table (enter frame #, set valid bit, etc.), restart the faulting instruction
+* **page not resident** - will get an empty frame, loads the page, updates the page (translation) table (enter frame#, set valid bit, etc.), restart the faulting instruction
 
 A page table for resident parts of the address space:
 
@@ -193,7 +193,7 @@ TLB is a shared piece of hardware. Normal page tables are per-process (address s
 
 * **flush** the TLB (invalidate all entries) at the cost of high context-switching ovehead (e.g. Intel x86)
 * tag entries with **address-space ID (ASID** - called a _tagged TLB_; used (in some form) on all modern architectures  
-TLB entry contains: ASID, page #, frame #, valid and write-protect bits
+TLB entry contains: ASID, page#, frame#, valid and write-protect bits
 
 ## Recap -Simplified Components of Virtual Memory System
 
