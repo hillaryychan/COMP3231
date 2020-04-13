@@ -72,11 +72,16 @@ Paging is where memory is divided into equal-sized chunks (frames) and the progr
 
 The lower bits of a virtual address is not translated and passed through the MMU to form a physical address
 
+Most page sizes are of 4KB (2^12).  
+We can just take the first how ever many digits and that will give the **page number**. It we had something other than the power of 2, we would need to complex calculations to find the page number. The last set of digits will represent the **offset**
+
 **10.** What is a TLB? What is its function?
 
 TLB is the translation look-aside buffer. It is an associative **cache** of page table entries to speed up the translation of virtual addresses to physical addresses
 
 **11.** Describe a two-level page table and how it is used to translate a virtual address into a physical address.
+
+Uses the first 10 bits to index the first level table, and second 10 bits to index the second array which stores the page table entry.
 
 **12.** Given a two-level page table (in physical memory), what is the average number of physical memory accesses per virtual memory access in the case where the TLB has a 100% miss ratio, and the case of a 95% hit ratio
 
@@ -110,7 +115,7 @@ EntryHi     EntryLo
 |               Results                             |
 |---------------------------------------------------|
 | VAddr      | PhysAddr   | Access                  |
-| 0x00028123 |            | Invalid                 |
+| 0x00028123 |            | Invalid (V=0)           |
 | 0x0008a7eb |            | Invalid (ASID mismatch) |
 | 0x0005cfff | 0x006a8fff | Global bit, R/W         |
 | 0x0001c642 | 0x00a97642 | R/W                     |
