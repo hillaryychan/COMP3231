@@ -86,7 +86,7 @@ MIPS' `c0` Registers:
 
 There are 64 TLB entries, and they are accessed via software through coprocessor 0 registers (`EntryHi`, `EntryLo`)
 
-**MIPS TLB Translation**:
+**MIPS TLB Translation**:  
 You are given an address in format `0x????????` and address space (ASID) `0x00000200`  
 The TLB has the format:
 
