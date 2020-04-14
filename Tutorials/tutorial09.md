@@ -50,15 +50,20 @@ Given the following constants from the source code:
 And a 32-bit page table entry and 32-bit virtual address is defined as
 
 ``` C
-    uint32_t pte;
-    vaddr_t vaddr;
+uint32_t pte;
+vaddr_t vaddr;
 ```
 
 **9.** What C expressions would you use to set or reset the valid bit in a page table entry?
+
 **10.** What C expression would you use to test if the valid bit is set?
+
 **11.** How would you extract the 12-bit offset (bits 0 - 11) from the virtual address?
+
 **12.** How would you convert the 10 most significant bits (22-31) of a virtual address into an index?
+
 **13.** How would you convert the next 10 most significant bits (12-21) into an index?
+
 **14.** How would you round down a virtual address to the base of the page?
 
 Page last modified: 12:19pm on Sunday, 12th of April, 2020
