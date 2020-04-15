@@ -87,7 +87,7 @@ MIPS' `c0` Registers:
 There are 64 TLB entries, and they are accessed via software through coprocessor 0 registers (`EntryHi`, `EntryLo`)
 
 **MIPS TLB Translation**:  
-You are given an address in format `0x????????` and address space (ASID) `0x00000200`  
+You are given a virtual address in format `0x????????` and address space (ASID) `0x00000200`  
 The TLB has the format:
 
 ``` txt
@@ -101,13 +101,13 @@ EntryHi     EntryLo
 0x0001c200  0x00a97600
 ```
 
-1. Find an `EntryHi`entry in the TLB where the first 5 bits match your virtual address (the first 5 bits represent the page number)
-2. Check the ASID matches your given ASID (i.e the last 3 bits match)
+1. Find an `EntryHi`entry in the TLB where the first 5 digits match your virtual address (the first 5 digits represent the page number)
+2. Check the ASID matches your given ASID (i.e the last 3 digits match)
 3. Check the flag bits in the `EntryLo` mapping of the TLB (i.e the 6th bit)
     1. If the valid bit is **not** set, the mapping is **invalid**
     2. If the ASID does not match and the global bit is not set, the mapping is **invalid**
     3. Otherwise, the mapping is **valid**
-4. If the mapping is valid, the physical address is the first 5 bits of `EntryLo` (the frame number) and the last 3 bits of your virtual address (the offset)
+4. If the mapping is valid, the physical address is the first 5 digits of `EntryLo` (the frame number) and the last 3 digits of your virtual address (the offset)
 
 The `c0_Index` register is used as an index to TLB entries. Single TLB entries are manipulated/viewed through `EntryHi` and `EntryLo` registers. The index register specifies which TLb entry to change/view
 
