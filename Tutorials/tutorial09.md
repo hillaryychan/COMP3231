@@ -257,26 +257,42 @@ vaddr_t vaddr;
 
 **9.** What C expressions would you use to set or reset the valid bit in a page table entry?
 
+``` C
+pte = pte | TLBLO_VALID /* set */
+pte = pte & ~TLBLO_VALID /* reset */
+```
+
 `kprintf()` uses a lock to serialise access to the console. If the lock blocks, it context switches, whcih will call `as_activate` and flush the TLB, ejecting any newly inserted entry. Hence, the system ends up in an infinite loop replacing the TLB entry, and then ejecting it via `kprintf()`
 
 **10.** What C expression would you use to test if the valid bit is set?
 
-See answer to Q8
+``` C
+if (pte & TLBLO_VALID)
+    / * do stuff */
+```
 
 **11.** How would you extract the 12-bit offset (bits 0 - 11) from the virtual address?
 
-See answer to Q8
+``` C
+offset = vaddr & ~TLBHI_VPAGE
+```
 
 **12.** How would you convert the 10 most significant bits (22-31) of a virtual address into an index?
 
-`alloc_kpages()` and `free_kpages()`
+``` C
+index = vaddr >> 20
+```
 
 **13.** How would you convert the next 10 most significant bits (12-21) into an index?
 
-Use a bump pointer
+``` C
+index = (vaddr << 10) >> 20
+```
 
 **14.** How would you round down a virtual address to the base of the page?
 
-`free_kpages()` can't sensibly return free memory to a bump pointer allocator (except in the rare case that the last memory allocated is the first free'd), so it simply loses memory that is passed to it.
+``` C
+vaddr = vaddr & TLBHI_VPAGE
+```
 
 Page last modified: 12:19pm on Sunday, 12th of April, 2020
