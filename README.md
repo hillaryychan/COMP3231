@@ -20,6 +20,6 @@
     2. [Virtual Memory I](https://github.com/hillaryychan/COMP3231/blob/master/notes/14_Virtual-Memory.md) (sharing memory, page table structures, implementation issues, translation look-aside buffers)
     3. [Virtual Memory II](https://github.com/hillaryychan/COMP3231/blob/master/notes/15_Virtual-Memory-ctd.md) (MIPS TLB handling, demand paging/segmentation, locality, working sets, thrashing, virtual memory policies)
 6. [Multiprocessors](https://github.com/hillaryychan/COMP3231/blob/master/notes/16_Multiprocessors.md) (bus based UMA,OS for multiprocessors, multiprocessor synchronisation)
-7. [Scheduling](https://github.com/hillaryychan/COMP3231/blob/master/notes/notes/17_Scheduling.md)
+7. [Scheduling](https://github.com/hillaryychan/COMP3231/blob/master/notes/17_Scheduling.md)
 8. [I/O](https://github.com/hillaryychan/COMP3231/blob/master/notes/18_IO.md)
 
