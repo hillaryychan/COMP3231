@@ -280,13 +280,13 @@ offset = vaddr & ~TLBHI_VPAGE
 **12.** How would you convert the 10 most significant bits (22-31) of a virtual address into an index?
 
 ``` C
-index = vaddr >> 20
+index = vaddr >> 22
 ```
 
 **13.** How would you convert the next 10 most significant bits (12-21) into an index?
 
 ``` C
-index = (vaddr << 10) >> 20
+index = (vaddr << 10) >> 22
 ```
 
 **14.** How would you round down a virtual address to the base of the page?
