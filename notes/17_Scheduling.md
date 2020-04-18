@@ -137,7 +137,7 @@ Given X processes (or threads) and Y CPUs, we need a way to allocated the proces
 
 ### Single Shared Ready Queue
 
-One approach is to have a **single shared ready queue**. When a CPU goes idle, it takes the highest priority process from the shared ready queue.
+One approach is to have a **single shared ready queue**. When a CPU goes idle, it takes the highest priority process from the shared ready queue. Note that we need to synchronise the data structure that is keeping our prioritised round robin queue as it CPU will need to "compete" to get the next task.
 
 ![shareds ready queue](../imgs/17-51_shared-ready-queu.png)
 
