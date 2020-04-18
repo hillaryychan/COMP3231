@@ -4,7 +4,7 @@ On a multi-programmed system, we may have more than one _ready_ process
 On a batch system, we may have my jobs waiting to be run  
 On a multi-user system, we may have many users concurrently using the system
 
-The **scheduler** decides who to run next. The process of choosing is called **scehduling**.
+The **scheduler** decides who to run next. The process of choosing is called **scheduling**.
 
 Scheduling is not important in certain scenarios:
 
@@ -86,3 +86,83 @@ Each process is given a **timeslice** to run in. When the time slice expires, th
 It can be implemented with a ready queue and a regular timer interrupt
 
 ![round robin](../imgs/17-19_round-robin.jpg)
+
+**Pros**:
+
+* fair
+* easy to implement
+
+**Cons**:
+
+* assumes everybody is equal
+
+**Issue**: what should the time slice be?  
+If it is too short, we waste a lot of time switching between processes; e.g. timeslice of 4ms with 1ms context switch = 20% round robin overhead  
+If it is too long, the system is not responsive; e.g. timeslice of 100ms, if 10 people hit the `enter` key simultaneously, the last guy to run will only see progress after 1 second. This degenerates into a first-come, first-serve if the time slice is longer than the burst length
+
+##### Priorities
+
+Each process (or thread) is associated with priority. This provides the basic mechanism to influence a scheduler decision; the scheduler will always choose a process/thread of higher priority over lower priority.
+
+Priorities can be defined internally or externally;  
+**internal**: e.g. I/O-bound or CPU-bound  
+**external**: e.g. based on importance to user
+
+Example:
+
+![priority round robin](../imgs/17-24_priority-round-robin.jpg)
+
+Usually priorities are implemented by multiple priority queues, with a round robin on each queue. This does have the disadvantage that lower priorities can starve. They need to adapt priorities periodically (based on ageing or execution history)
+
+![priority queue](../imgs/17-46_priority-queue.png)
+
+## Traditional UNIX Scheduler
+
+In the **traditional UNIX scheduler**, is a two-level scheduler. The high-level scheduler schedules processes between memory and disk. The low-level scheduler is the CPU scheduler, which is based on a multi-level queue structure with a round robin at each level
+
+![traditional unix scheduler](../imgs/17-48_trad-unix-scheduler.png)
+
+the highest priority (lower number) is scheduled.  
+Priorities are **_re-calculated_** once per second, and re-inserted into appropriate ques. This avoids starvation of low priority threads and penalises CPU-bound threads
+
+`priority = CPU_usage + nice + base`
+
+* `CPU_usage` is the number of clock ticks; this decays over time to avoid permanently penalising the process
+* `nice` is a value given the to process by a user to permanently boost or reduce its priority
+* `base` is a set of hard-wired, negative values to boost priority of I/O-bound system activities; e.g. swapper, disk I/O, character I/O
+
+## Multiprocessor Scheduling
+
+Given X processes (or threads) and Y CPUs, we need a way to allocated the processes to CPUs.
+
+### Single Shared Ready Queue
+
+One approach is to have a **single shared ready queue**. When a CPU goes idle, it takes the highest priority process from the shared ready queue.
+
+![shareds ready queue](../imgs/17-51_shared-ready-queu.png)
+
+**Pros**:
+
+* simple
+* automatic load balancing
+
+**Cons**:
+
+* lock contention on the ready queue can be a major bottleneck (due to frequent scheduling or many CPUs or both)
+* not all CPUs are equal - the last CPU a process ran on is likely to have more related entries in the cache
+
+### Affinity Scheduling
+
+The basic idea of **affinity scheduling** is to try to run a process on the CPU it ran on last time.
+
+An approach to this is **multiple queue multiprocessor scheduling**
+
+Each CPU has its own ready queue.  
+The coarse-grained algorithm assigns processes to CPUs  It defines the affinity, and roughly balances the load.  
+The bottom-level fine-grained algorithm scheduler is the frequently invoked scheduler (e.g. on blocking on I/O, a lock, or exhausting timeslice). It runs on each CPU and selects from its own ready queue (ensures affinity). If nothing is available from the local ready queue, it runs a process from another CPUs ready queue rather than go idle (aka "work stealing")
+
+**Pros**:
+
+* no lock contention on per-CPU ready queues in the (hopefully) common case
+* load balancing to avoid idle queue
+* automatic affinity to a single CPU for more cache friendly behaviour
