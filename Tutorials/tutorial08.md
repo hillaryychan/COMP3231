@@ -138,4 +138,3 @@ Temporal locality - recently accesed items are likely to be accessed in the near
 Spatial locality - items whose addresses are near each other tend to be referenced close together in time
 
 Page last modified: 8:04pm on Sunday, 5th of April, 2020
-

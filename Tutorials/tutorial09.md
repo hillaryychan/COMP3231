@@ -183,9 +183,9 @@ These functions are used by OS/161 internally to manage the address spaces of pr
 
 **8.** Assuming a 2-level hierarchical page table (4k pages), show for the following virtual addresses:
 
-    1. The page number and offset;
-    2. the translated address (after any page allocation); and
-    3. the contents of the page table after the TLB miss.
+1. The page number and offset;
+2. the translated address (after any page allocation); and
+3. the contents of the page table after the TLB miss.
 
 The page table is initially empty, with no L2 pages. You may assume that the allocator returns frames in order, so that the first frame allocated is frame 1, then frames 2, 3, 4, etc.
 
