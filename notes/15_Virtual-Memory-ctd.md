@@ -132,7 +132,7 @@ c0.PC            = 0x8000 000
 
 ### Outline of TLB Miss Handling
 
-Software does: 
+Software does:
 
 * lookup of page table entry corresponding to faulting address
 * If found:
@@ -328,7 +328,7 @@ We can also have **variable allocation**, where the number of pages allocated to
 
 There is **variable allocation with a global scope**. The operating system keeps a global list of free frames. A free frame is added to a resident set of a process when a page fault occurs. If there is no free frame, it replaces one from any process. It provides automatic balancing across the system but does not provide guarantees for important activities. This is the easiest and adopted by many operating systems.
 
-There is also **variable allocation with a local scope**. This allocated the number of page frames to a new process based on 
+There is also **variable allocation with a local scope**. This allocated the number of page frames to a new process based on
 
 * application type
 * program request

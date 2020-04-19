@@ -1,6 +1,6 @@
 # Multiprocessors
 
-We will look at **shared-memory multiprocessors** (i.e when multiple processors share the same memory. A single CPU can only go so fast. If we use more than one CPU, it is possible to improve performance. This is based on the assumption that workload can be panellised and is not I/O bound or memory bound. 
+We will look at **shared-memory multiprocessors** (i.e when multiple processors share the same memory. A single CPU can only go so fast. If we use more than one CPU, it is possible to improve performance. This is based on the assumption that workload can be panellised and is not I/O bound or memory bound.
 
 Recall **Amdahl's Law**, where given a portion _P_ of a program that can be made parallel, and the remaining portion _(1-P)_, sped up by using _N_ processors
 
@@ -89,7 +89,7 @@ An example in real life covering scalability:
 
 Early 1990’s, CSE wanted to run 80 X-Terminals off one or more server machines.  
 The winning tender was a 4-CPU bar-fridge-sized machine with 256M of RAM. This was eventually configured to 6-CPU and 512M of RAM. The machine ran fine in all pre-session testing.  
-However the combination of students and assignment deadlines made the machine unusable. 
+However the combination of students and assignment deadlines made the machine unusable.
 
 To fix the problem, the tenderer supplied more CPUs (increasing the number to 8) to improve performance, yet there was no change.
 

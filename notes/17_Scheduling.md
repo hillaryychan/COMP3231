@@ -21,7 +21,7 @@ Scheduling decisions can have a dramatic effect on perceived performance of the 
 
 ## Application Behaviour
 
-Applications tend to have bursts of CPU usage alternating with periods of I/O wait. A process can be a 
+Applications tend to have bursts of CPU usage alternating with periods of I/O wait. A process can be a
 
 ![Application Behaviour](../imgs/17-6_app-behaviour.png)
 
@@ -81,7 +81,7 @@ Realtime algorithms has additional goals:
 
 #### Round Robin Scheduling
 
-Each process is given a **timeslice** to run in. When the time slice expires, the next process pre-empts the current process, and runs for its time slice, and so on. The pre-empted process is placed at the end of the queue. 
+Each process is given a **timeslice** to run in. When the time slice expires, the next process pre-empts the current process, and runs for its time slice, and so on. The pre-empted process is placed at the end of the queue.
 
 It can be implemented with a ready queue and a regular timer interrupt
 
