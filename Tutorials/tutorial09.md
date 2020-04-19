@@ -130,7 +130,7 @@ The following macros are defined in OS/161 for setting and masking values writte
 
 **6.** What do the `as_*` functions do? Why do we need `as_prepare_load()` and `as_complete_load()`?
 
-These functions are used by OS/161 internally to manage the address spaces of processes. These functions are dependent on the data structures (e.g. region list and page tables) sed to book-keep virtual memory, and thus you have to implement them. A summary of them is available in the header file.
+These functions are used by OS/161 internally to manage the address spaces of processes. These functions are dependent on the data structures (e.g. region list and page tables) used to book-keep virtual memory, and thus you have to implement them. A summary of them is available in the header file.
 
 `as_prepare_load()` is required as normally code segments are mapped read-only. `as_prepare_load()` enable writing to the code segment while the OS loads the code associated with the process. `as_complete_load()` then removes write permissions to the code segment to revert it back to read-only.
 
