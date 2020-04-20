@@ -5,7 +5,7 @@
     1. [Processes and Threads Implementation](https://github.com/hillaryychan/COMP3231/blob/master/notes/05_Processes-and-Threads-Impl.md) (MIPS recap, user and kernel level threads, context switching)
     2. [System Calls](https://github.com/hillaryychan/COMP3231/blob/master/notes/06_System-Calls.md) (syscall implementation, exception handling in MIPS and OS/161)
 3. Concurrency and Deadlock
-    1. [Concurrency and Synchronisation](https://github.com/hillaryychan/COMP3231/blob/master/notes/03_Concurrency-and-Synchronisation.md) (mutual exclusion, semaphores. monitors, OS/161 synchronisation primitives)
+    1. [Concurrency and Synchronisation](https://github.com/hillaryychan/COMP3231/blob/master/notes/03_Concurrency-and-Synchronisation.md) (mutual exclusion, semaphores, monitors, OS/161 synchronisation primitives)
     2. [Deadlock](https://github.com/hillaryychan/COMP3231/blob/master/notes/04_Deadlock.md) (deadlock modelling and recovery, starvation)
 4. File Systems
     1. [Computer Hardware Review](https://github.com/hillaryychan/COMP3231/blob/master/notes/07_Memory-Hierarchy.md) (memory hierarchy, caching)
@@ -21,4 +21,4 @@
     3. [Virtual Memory II](https://github.com/hillaryychan/COMP3231/blob/master/notes/15_Virtual-Memory-ctd.md) (MIPS TLB handling, demand paging/segmentation, locality, working sets, thrashing, virtual memory policies)
 6. [Multiprocessors](https://github.com/hillaryychan/COMP3231/blob/master/notes/16_Multiprocessors.md) (bus based UMA,OS for multiprocessors, multiprocessor synchronisation)
 7. [Scheduling](https://github.com/hillaryychan/COMP3231/blob/master/notes/17_Scheduling.md) (scheduling algorithms, multiprocessor scheduling)
-8. [I/O](https://github.com/hillaryychan/COMP3231/blob/master/notes/18_IO.md)
+8. [I/O](https://github.com/hillaryychan/COMP3231/blob/master/notes/18_IO.md) (device drivers, I/O interaction, interrupt handling, buffering)
