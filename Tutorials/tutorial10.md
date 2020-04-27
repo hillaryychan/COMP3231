@@ -100,10 +100,28 @@ CPU is consumed when switching from one task to another. This switching does not
 
 **14.** Describe _programmed I/O_ and _interrupt-driven I/O_ in the case of receiving input (e.g. from a serial port). Which technique normally leads to more efficient use of the CPU? Describe a scenario where the alternative technique is more efficient.
 
-**15.** A device driver routine (e.g. `read_block()` from disk) is invoked by the file system code. The data for the filesystem is requested from the disk, but is not yet available. What do device drivers generally do in this scenario?
+For **programmed I/O**, the CPU waits for input by continuously reading a status register until it indicates input data is ready, after which, the CPU can read the incoming data, and then return to reading the status register waiting for further input
+
+For **interrupt-driven I/O**, the serial port device sends an interrupt to the CPU when data is ready to be read. The interrupt handler is then invoked, which acknowledges receiving the interrupt, reads the data from the device, and returns from the interrupt. The CPU is free for other activities while not interrupting processing
+
+Programmed I/O is normally **less efficient** as the CPU is _busy waiting_ for input when input is unavailable
+
+Programmed I/O can be more efficient in circumstances where input is frequent enough such that the overhead of interrupts (getting into and out of the interrupt handler) is more than the average time spent busy waiting. A realistic example is fast networking where packets are nearly always available
+
+**15.** A device driver routine (e.g. `read_block()` from disk) is invoked by the file system code. The data for the file system is requested from the disk, but is not yet available. What do device drivers generally do in this scenario?
+
+They block on a sync primitive that is later woken up by the disk interrupt handler when the block is available
 
 **16.** Describe how I/O buffering can be formulated as a _bounded-buffer producer-consumer problem_.
 
+Take the file system buffer cache as an example. The file system writes are _produces_ by application requests. The OS must select an available entry in the buffer cache (or re-use an existing one), or block until a free slot is available in the _bounded-size_ buffer cache.
+
+The interrupt handler can be considered a _consumer_ as after the write to disk completes, it marks the buffer cache entry as _clean_ (consumed), freeing it up for further writes
+
 **17.** An example operating system runs its interrupt handlers on the kernel stack of the currently running application. What restriction does this place on the interrupt handler code? Why is the restriction required?
+
+The interrupt handler must not block waiting for a resource, as it indirectly blocks the application that was running.
+
+If the application has the resource the interrupt handler requires (e.g. memory buffers), the system is deadlocked
 
 Page last modified: 2:40pm on Sunday, 19th of April, 2020
