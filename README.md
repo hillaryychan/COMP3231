@@ -22,3 +22,17 @@
 6. [Multiprocessors](https://github.com/hillaryychan/COMP3231/blob/master/notes/16_Multiprocessors.md) (bus based UMA,OS for multiprocessors, multiprocessor synchronisation)
 7. [Scheduling](https://github.com/hillaryychan/COMP3231/blob/master/notes/17_Scheduling.md) (scheduling algorithms, multiprocessor scheduling)
 8. [I/O](https://github.com/hillaryychan/COMP3231/blob/master/notes/18_IO.md) (device drivers, I/O interaction, interrupt handling, buffering)
+
+## Tutorials
+
+| Tutorial     | Topics |
+| ---          | ---    |
+| [Tutorial 2](https://github.com/hillaryychan/COMP3231/blob/master/Tutorials/tutorial02.md)    | Intro, Syscall Interface, Processes and Threads, Critical Sections|
+| [Tutorial 3](https://github.com/hillaryychan/COMP3231/blob/master/Tutorials/tutorial03.md)    | Synchronisation, Concurrency, Deadlock                            |
+| [Tutorial 4](https://github.com/hillaryychan/COMP3231/blob/master/Tutorials/tutorial04.md)    | MIPS, Threads, Kernel Entry and Exit                              |
+| [Tutorial 5](https://github.com/hillaryychan/COMP3231/blob/master/Tutorials/tutorial05.md)    | Memory Hierarchy and Caching, Files and File System               |
+| [Tutorial 6](https://github.com/hillaryychan/COMP3231/blob/master/Tutorials/tutorial06.md)    | Assignment 2                                                      |
+| [Tutorial 7](https://github.com/hillaryychan/COMP3231/blob/master/Tutorials/tutorial07.md)    | Files and File System                                             |
+| [Tutorial 8](https://github.com/hillaryychan/COMP3231/blob/master/Tutorials/tutorial08.md)    | Memory Management, Virtual Memory                                 |
+| [Tutorial 9](https://github.com/hillaryychan/COMP3231/blob/master/Tutorials/tutorial09.md)    | Assignment 3                                                      |
+| [Tutorial 10](https://github.com/hillaryychan/COMP3231/blob/master/Tutorials/tutorial10.md)   | Virtual Memory, Multi-processors, Scheduling, I/O                 |
