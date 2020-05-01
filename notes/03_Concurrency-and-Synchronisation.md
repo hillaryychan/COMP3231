@@ -89,14 +89,14 @@ while (TRUE){
 This works due to _strict alternation_ of each process taking turns.  
 It does have the following **disadvantages**:
 
-* busy waiting
-* process must wait its turn while the other process is doing something else. If there are many processes, all of them must wait their turn. This does not guarantee progress and overall is a **poor solutions** when processes require the critical section for differing durations
+* busy waiting - a process must wait its turn while the other process is doing something else. If there are many processes, all of them must wait their turn. This does not guarantee progress and overall is a **poor solution** when processes require the critical section for differing durations
 
 ### Mutual Exclusion Solutions by Disabling Interrupts
 
-The solution goes like this:  
-Before entering a critical region, we disable interrupts.  
-After leaving the critical region, we enable interrupts.
+The solution goes like this:
+
+* before entering a critical region, we disable interrupts.  
+* after leaving the critical region, we enable interrupts.
 
 This is a nice simple solution that works only on uniprocessor machines.  
 It has the following **disadvantages**;
@@ -120,7 +120,7 @@ if (lock == 1) {
 }
 ```
 
-Hardware guarantees that the instruction executes **atomically** (that is as an indivisible unit).
+Hardware guarantees that the instruction executes **atomically** (i.e. as an indivisible unit).
 
 ``` assembly
 enter region:
@@ -137,7 +137,7 @@ leave_region:
 This solution is simple (easy to show it's correct) and available at a user-level to any number of processors and to implement any number of lock variables.  
 However because it loops to check whether it can access the critical region, it **busy waits** or **spin locks**. This consumes CPU and starvation is possible when a process leaves its critical region and more than one process is waiting.
 
-A possible solution to the busy-wait problem is by sleeping and waking up the thread/process. The idea is that when the process is waiting for an event, it calls sleep to block instead of busy waiting. When the event happens, the even generator (another process) calls wakeup to unblock the sleeping process/thread. Waking a ready/running process has no effect.
+A possible solution to the busy-wait problem is by sleeping and waking up the thread/process. The idea is that when the process is waiting for an event, it calls sleep on the process to block it instead of busy waiting. When the event happens, the event generator (another process) calls wakeup to unblock the sleeping process/thread. Waking a ready/running process has no effect.
 
 ## The Producer-Consumer Problem
 
@@ -198,11 +198,11 @@ release_lock();         release_lock();
 
 Dijkstra (1965) introduced two primitives that are more powerful than a simple sleep and wakeup;
 
-* `P()`, `wait` or `down` to test
+* `P()`, `wait` or `down` to test and decrement
 * `V()`, `signal`, `up` to increment
 
 If a resource is not available the corresponding semaphore blocks any process `wait`ing for the resource. Blocked processes are put into a process queue maintained by the semaphore, avoiding busy waits. When a process releases a resource, it `signal`s this by means of the semaphore. Signalling resumes a blocked process if there is any.  
-Wait and signal operations cannot be interrupted.  
+Wait and signal operations **cannot be interrupted**.  
 Complex co-ordination can be implemented by multiple semaphores.
 
 Semaphores can be used to solve a variety of concurrency problems, however programming with them can be error-prone. E.g. you must signal for every wait if you want mutex. Too many or too few signals, or signals and waits in the wrong order can have catastrophic results.
@@ -242,7 +242,7 @@ Each primitive is atomic because interrupts are disabled for each.
 #### Synchronisation Tool
 
 Semaphores can be used a synchronisation tools.  
-Say we have two threads with functions A and B, where we always want be to execute after A. Using a semaphore count intialised to 0, all we need is this:
+Say we have two threads with functions A and B, where we always want be to execute after A. Using a semaphore count intialised to `0`, all we need is this:
 
 ``` C
 A() {
@@ -261,6 +261,8 @@ When `B` runs first, `wait` is called and `B` becomes blocked. Then `A` runs, `s
 
 #### Implementation of a Mutex
 
+Implement mutual exclusion by initialising the semaphore count to `1`.
+
 ``` C
 semaphore mutex;
 mutex.count = 1     // init mutex
@@ -275,6 +277,8 @@ signal(mutex);      // exit critical region
 Notice how the initial count determines how many waits can progress before blocking and requiring a signal.
 
 #### Solving the Producer-Consumer Problem
+
+To solve the producer-consumer problem we initialise the semaphore count to the size of the buffer.
 
 ```C
 #define N 4     // bufsize
@@ -299,10 +303,10 @@ prod() {                                con(){
 
 To ease concurrent programming, Hoare (1974) proposed **monitors**. Monitors are a higher level synchronisation primitive and a programming language construct.
 
-The idea is that a set of procedures, variables and data types are group in a special kind of module called a **monitor**. These variables and data types are only accessed from within the monitor. Only one process/thread can be in the monitor at any one time.  
+The idea is that a set of procedures, variables and data types are grouped in a special kind of module called a **monitor**. These variables and data types are only accessed from within the monitor. Only one process/thread can be in the monitor at any one time.  
 Mutual exclusion is implemented by the compiler, which should be less error prone.
 
-When a thread calls a monitor procedure, which already has a thread inside, it queues and it sleeps until the current thread exits the monitor.
+When a process/thread calls a monitor procedure, which already has a process/thread inside, it queues and it sleeps until the current process/thread exits the monitor.
 
 ![Monitor](../imgs/3-44_monitors.png)
 
@@ -322,14 +326,14 @@ monitor example {
 
 ### Condition Variables
 
-**Condition variables** are a mechanism to block when waiting for an event in additon to ensuring mutual exclusion. e.g. for the producer-consumer problem when the buffer is empty or full.
+**Condition variables** are a mechanism to block when waiting for an event in addition to ensuring mutual exclusion. e.g. for the producer-consumer problem when the buffer is empty or full.
 
 To allow a process to wait within the monitor, a **condition variable** must be declared as: `condition x,y;`.  
 Condition variables can only be used with the operations `wait` and `signal`.  
 `x.wait()` means that the process invoking this operation is suspended until another process invokes. Another thread can enter the monitory while the original is suspended.  
 `x.signal()` resumes exactly **one** suspended process. If no process is suspended, then the `signal` operation has no effect.
 
-![Conditon variables in monitors](../imgs/3-49_condition-var.png)
+![Condition variables in monitors](../imgs/3-49_condition-var.png)
 
 Solution to producer-consumer problem using monitors and condition variables:
 
@@ -341,18 +345,19 @@ monitor ProducerConsumer
     procedure insert(item: integer);
     begin
         if count = N then wait(full);
-        inser_item(item)
+        insert_item(item)
         count := count + 1;
         if count = 1 then signal(empty);
     end
 
-    procedure remove: integer;
+    function remove: integer;
     begin
         if count = 0 then wait(empty);
-        inser_item(item)
+        remov = remove_item;
         count := count - 1;
         if count = N-1 then signal(full);
     end;
+    count := 0;
 end monitor;
 
 procedure producer;
