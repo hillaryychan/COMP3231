@@ -20,7 +20,7 @@ Here is an example of what the combined trace of processes above would look like
 
 ![combined execution trace](../imgs/2-6_combined-exec-trace.jpg)
 
-Note that none of the processes finish execution in a single run. They all run for a brief moment before another process takes its place, however from the processes perspective they are running from start to finish. In this process model, only one program is active ay any instant
+Note that none of the processes finish execution in a single run. They all run for a brief moment before another process takes its place, however from the processes perspective they are running from start to finish. In this process model, only one program is active at any instant
 
 Process and thread models for Operating Systems
 
@@ -28,7 +28,7 @@ Process and thread models for Operating Systems
 
 Here are some examples of Operating Systems implementing the above models
 
-* Single process, single thread MSDOS
+* Single process, single thread MS-DOS
 * Single process, multiple threads - OS/161 as distributed
 * Multiple processes, single thread - Traditional UNIX
 * Multiple processes, multiple threads - Modern Unix (Linux, Solaris), Windows
@@ -102,7 +102,7 @@ Here is a list of items we would need to track when separating execution from th
 
 Using an analogy to a Hamburger restaurant, we can visually represent the different types of thread models we can have:
 
-![thread modesl](../imgs/2-25_thread-models.jpg)
+![thread models](../imgs/2-25_thread-models.jpg)
 
 | Model                     | Characteristics                                       |
 | ---                       | ---                                                   |
