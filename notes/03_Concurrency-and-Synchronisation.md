@@ -241,7 +241,7 @@ Each primitive is atomic because interrupts are disabled for each.
 
 #### Synchronisation Tool
 
-Semaphores can be used a synchronisation tools.  
+Semaphores can be used a synchronisation tool.  
 Say we have two threads with functions A and B, where we always want be to execute after A. Using a semaphore count intialised to `0`, all we need is this:
 
 ``` C
