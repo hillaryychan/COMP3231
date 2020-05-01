@@ -330,7 +330,7 @@ monitor example {
 
 To allow a process to wait within the monitor, a **condition variable** must be declared as: `condition x,y;`.  
 Condition variables can only be used with the operations `wait` and `signal`.  
-`x.wait()` means that the process invoking this operation is suspended until another process invokes. Another thread can enter the monitory while the original is suspended.  
+`x.wait()` means that the process invoking this operation is suspended until another process invokes. Another thread can enter the monitor while the original is suspended.  
 `x.signal()` resumes exactly **one** suspended process. If no process is suspended, then the `signal` operation has no effect.
 
 ![Condition variables in monitors](../imgs/3-49_condition-var.png)
@@ -344,18 +344,18 @@ monitor ProducerConsumer
 
     procedure insert(item: integer);
     begin
-        if count = N then wait(full);
+        if count = N then wait(full);       // sleep cause buffer is full
         insert_item(item)
         count := count + 1;
-        if count = 1 then signal(empty);
+        if count = 1 then signal(empty);    // buffer no longer empty, wake up consumers
     end
 
     function remove: integer;
     begin
-        if count = 0 then wait(empty);
+        if count = 0 then wait(empty);      // sleep cause buffer is empty
         remov = remove_item;
         count := count - 1;
-        if count = N-1 then signal(full);
+        if count = N-1 then signal(full);   // buffer no longer full, wake up producer
     end;
     count := 0;
 end monitor;
