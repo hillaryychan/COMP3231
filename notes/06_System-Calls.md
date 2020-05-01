@@ -2,7 +2,7 @@
 
 ![Structure of a computer system](../imgs/6-4_computer-system-structure.png)
 
-**System calls** can be viewed as special function calls that provide a controlled entry into the kernel. While in the kernel, they perform a privileged operation and return to the original caller with the result. They restrict possible entry points to secure locations to prevent entering after any security checks.  
+**System calls** can be viewed as special function calls that provide a controlled entry into the kernel. While in the kernel, they perform a privileged operations and return to the original caller with the result.  
 The system call interface represents the abstract machine provided by the operating system.
 
 A brief overview of the system call interface from the user's perspective:
@@ -76,7 +76,7 @@ There is/are also
 
 In privileged-mode operation, to protect the operating system execution, two or more CPU modes of operation exist;  
 **Privileged mode** (or **system/kernel-mode**), where all instructions and registers are available  
-**User-mode**, which uses and can only access 'safe' subset of the instruction set. It only affects the state of the application itself and cannot be used to uncontrollable interfere with the OS
+**User-mode**, which uses and can only access 'safe' subset of the instruction set. It only affects the state of the application itself and cannot be used to uncontrollably interfere with the OS
 
 ![cpu registers](../imgs/6-14_cpu-registers.jpg)
 
@@ -100,20 +100,20 @@ When a system call is made the syscall mechanism securely transfers from user ex
 
 System call transitions are triggered by special processor instructions.  
 From user to kernel via a system call instruction  
-from kernel to user via a return from a privileged mode instruction
+From kernel to user via a return from a privileged mode instruction
 
 During a system call:
 
 * the processor mode
-    * switched from user-mode to kernel-mode
-    * switched back when returning to user-mode
+    * is switched from user-mode to kernel-mode
+    * is switched back when returning to user-mode
 * the stack pointer (SP)
     * user-level SP is saved and kernel SP is initialised
     * user-level SP is restored when returning to user-mode
 * the program counter (PC)
     * user-level PC is saved and PC is set to kernel entry point
     * user-level PC is restored when returning to user-level
-    * kernel entry via designated entry point must be strictly enforced
+    * kernel entry via designated entry point must be strictly **enforced**
 * registers
     * set at user-level to indicate the system call type and its arguments; this is a convention between applications and the kernel
     * some registers are preserved at user-level or kernel level in order to restart user-level execution; this depends on the language calling convention etc.
@@ -194,7 +194,7 @@ On the kernel side of the system call:
 
 ## OS/161 Exception Handling
 
-Note: the following code is from the uniprocessor variant of 0S161 (v1.x). It is simpler but broadly similar to the current version
+Note: the following code is from the uniprocessor variant of 0S/161 (v1.x). It is simpler but broadly similar to the current version
 
 ![0S161 exception handling](../imgs/6-60_os161-exception-handling.jpg)
 

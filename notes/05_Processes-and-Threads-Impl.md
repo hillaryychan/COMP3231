@@ -6,8 +6,8 @@ MIPS uses a load-and-store architecture. There are no instructions that operate 
 
 Simple load/stores to/from memory from/to registers:
 
-* store word: `sq r4 (r5)` stores the contents of r4 in memory using the address contained in register r5
-* load word: `lw r3 (r7)` loads the contents of memory into r3 using the address contained in r7. There is a delay of one instruction after load before data is available in the destination register. There **must always** be an instruction between a load from memory and the subsequent use of the register.
+* store word: `sq r4 (r5)` stores the contents of `r4` in memory using the address contained in register `r5`
+* load word: `lw r3 (r7)` loads the contents of memory into `r3` using the address contained in `r7`. There is a delay of one instruction after load before data is available in the destination register. There **must always** be an instruction between a load from memory and the subsequent use of the register.
 * other load/store instructions: `lw sw lb sb lh sh`
 
 Arithmetic and logical operations are register-to-register operations. There are no arithmetic operations in memory.
@@ -50,7 +50,7 @@ sw  r4, 32(r29)     # store result back into a
 User-mode accessible registers:
 
 * 32 general purpose registers
-    * `r0` is hardwired to `0`
+    * `r0` is hard-wired to `0`
     * `r31` is the **link** register for `jal` instruction, which stores the return address for when a `jal` completes
 * `HI`/`LO` - `2 * 32-bits` for multiply and divide
 * `PC` - the program counter. It is not directly visible and is modified implicitly by jump and branch instructions
@@ -71,7 +71,7 @@ Branching and jumping have **branch delay slot**. The instruction following a br
 
 This is because MIPS uses RISC architecture; a 5 stage pipeline, where instructions are partially through a pipeline prior to `jump` having an effect
 
-![MIPS 5 stage pipline](../imgs/5-9_MIPS-pipeline.png)
+![MIPS 5 stage pipeline](../imgs/5-9_MIPS-pipeline.png)
 
 The `jal` (jump and link) instruction is used to implement function calls. When this happens `r23 = PC +8`. This is where the return address is stored when we return from the function call.
 
@@ -120,9 +120,9 @@ Example:
 
 ## The Process Model
 
-Processes minimally consist of three segmnets
+Processes minimally consist of three segments
 
-* **text** containing the code (instrucions)
+* **text** containing the code (instructions)
 * **data** for global variables
 * **stack** for activation records of procedures/functions/methods and for local variables
 
@@ -177,21 +177,23 @@ A view of user-level threads:
 
 Implementation at user level means
 
-* there is a User-Level Thread Control (TCB), ready queue, blocked queue, and dispatcher. * the kernel has no knowledge of the threads and it only sees a single process
+* there is a User-Level Thread Control (TCB), ready queue, blocked queue, and dispatcher.
+* the kernel has no knowledge of the threads and it only sees a single process
 * if a thread blocks waiting for a resource held by another thread inside the same process, its state is saved and the dispatcher switches to another ready thread
 * thread management (create, exit, yield, wait) are implemented in a runtime support library
 
 **Advantages**:
 
-* thread management and switching at userlevel is much **faster** than doing it in kernel level. There is no need to trap (take syscall exceptions) into the kernel and switch back
+* thread management and switching at user-level is much **faster** than doing it in kernel level. There is no need to trap (take syscall exceptions) into the kernel and switch back
 * the dispatcher algorithm can be tuned to the application. e.g. use priorities
-* can be i**implemented on any OS** (thread or non-thread aware)
-* can easily **support massive numbers of threads** on a per-application basis. Use normal application memory. Kernel memory is more constrained and it difficult to efficiently support differing numbers of threads for different applications
+* can be **implemented on any OS** (thread or non-thread aware)
+* can easily **support massive numbers of threads** on a per-application basis.  
+Uses normal application memory. Kernel memory is more constrained and it difficult to efficiently support differing numbers of threads for different applications
 
 **Disadvantages**:
 
 * threads have to `yield` manually since there is no timer interrupt delivery to the user-level. This is known as **co-operative multithreading**. A single poorly designed/implemented thread can monopolise the available CPU time.  
-There are work-around (e.g. a time signal per second to enable pre-emptive multi-threading)
+There are workarounds (e.g. a time signal per second to enable pre-emptive multi-threading)
 * does not take advantage of multiple CPUs (in reality we still have a single threaded process as far as the kernel is concerned)
 * if a thread makes a blocking system call (or takes a page fault), the process (and all the internal threads) block
 
@@ -203,8 +205,8 @@ A view of kernel-level (or kernel-provided) threads:
 
 Threads are implemented by the kernel so
 
-* TCBs are stored in the kernel. A subset of information (related to execution context) is in a traditional PCB. The TCBs have PCBs associated with them; resources associated with the group of threads (the process)
-* thread management calls are implemented as system calls; e.g. create, wait,exit
+* TCBs are stored in the kernel. A subset of information (related to execution context) is in a traditional PCB. The TCBs have PCBs associated with them; resources are associated with the group of threads (the process)
+* thread management calls are implemented as system calls; e.g. create, wait, exit
 
 **Advantages**:
 
@@ -219,7 +221,7 @@ Threads are implemented by the kernel so
 
 A skeleton of what the lowest level of an operating system does when an interrupt occurs; i.e a **context switch**
 
-1. Hardware stacks program counter etc. onto the kernel stack
+1. Hardware stacks program counter onto the kernel stack
 2. Hardware loads new program counter from interrupt vector of where we will transition to
 3. Assembly language procedure saves registers
 4. Assembly language procedure sets up new stack
@@ -248,7 +250,7 @@ Context switch must be **transparent** for processes/threads. When dispatched ag
 The state is called the **process/thread context**.  
 Switching between process/threads results in a **context switch**
 
-A diagram of a simplified explict thread switch:
+A diagram of a simplified explicit thread switch:
 
 ![explicit thread switch](../imgs/5-46_explicit-thread-switch.jpg)
 
