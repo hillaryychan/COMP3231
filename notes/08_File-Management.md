@@ -12,11 +12,11 @@ The first file systems were single-level (everything in one directory). Files we
 
 ![PDP-8 with DECTape](../imgs/8-4_PDP-8.jpg)
 
-Time-sharing operating systems required full-fledged file systems. MULTICS used a multi-level directory structure, keeping file that belong to different users separately. It had acces control lists and symbolic links.
+Time-sharing operating systems required full-fledged file systems. MULTICS used a multi-level directory structure, keeping file that belong to different users separately. It had access control lists and symbolic links.
 
 ![Honeywell 6180 running MULTICS](../imgs/8-5_MULTICS.jpg)
 
-UNIX was based on ideas from MULTIX with a simple access control model; everything is a file.
+UNIX was based on ideas from MULTICS with a simple access control model; everything is a file.
 
 ![PDP-7](../imgs/8-6_PDP-7.png)
 
@@ -43,7 +43,7 @@ A list of some file types:
 
 Some systems distinguish between regular file types; ASCII text files, binary files
 
-Files can have **sequential acces** where we can read all bytes/records from the beginningbut cannot jump around, but can rewind or back up. This is convenient when the medium is magnetic tape.
+Files can have **sequential acces** where we can read all bytes/records from the beginning but cannot jump around, but can rewind or back up. This is convenient when the medium is magnetic tape.
 
 There is also **random access** where bytes/records can be read in any order. This is essential for database systems. We can read the file by moving a file pointer then calling read (`lseek(location,...); read();`) or specifying where to read (`read(location,...)`
 
