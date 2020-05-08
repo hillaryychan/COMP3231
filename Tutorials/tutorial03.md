@@ -742,9 +742,11 @@ p5           0   3   3   2         0   6   5   2     0   3   2   0
 process     r1  r2  r3  r4        r1  r2  r3  r4    r1  r2  r3  r4
 p1           0   0   1   2         0   0   1   2     0   0   0   0
 p2           2   0   0   0         2   7   5   0     0   7   5   0
-p3           0   1   3   4         6   6   5   6     6   6   2   2
+p3           0   1   3   4         6   6   5   6     6   5   2   2
 p4           2   3   5   4         4   3   5   6     2   0   0   2
 p5           0   3   3   2         0   6   5   2     0   3   2   0
+Note: we allocate r2 to p3 and update the request (still needs) matrix
+Then we use Banker's algorithm to determine whether the state will be safe or not
 ```
 
   1. Can the request be safely granted immediately?  
