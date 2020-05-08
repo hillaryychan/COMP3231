@@ -48,10 +48,10 @@ Usually the event is the release of a currently held resource. In this state, no
 
 There are four conditions for deadlock:
 
-1. **Mutual exclusion** condition - each resource is assigned to 1 process or is available
+1. **Mutual exclusion** condition - each resource is either assigned to 1 process or is available
 2. **Hold and wait** condition - processes holding resources can request additional resource
-3. **No pre-emption** condition - previously granted resources cannot be forcibly taken away
-4. **Circular wait** condition - there must be a circular chain of 2 or more processes. Each process is waiting for resources held by the next member of the chain
+3. **No pre-emption** condition - allocated resources cannot be forcibly taken away
+4. **Circular wait** condition - there must be a circular chain of 2 or more processes with each process waiting for resources held by the next member of the chain
 
 ## Deadlock Modelling
 
@@ -75,7 +75,7 @@ Strategies for dealing with deadlocks:
 
 ### Approach 1: The Ostrich Algorithm
 
-Pretend there is no problem. This is reasonable if deadlocks occur very rarely and the cost of prevention is high; e.g. only one process ones at a time. It is a trade-off between **convenience** (engineering approach) and **correctness** (mathematical approach)
+Pretend there is no problem. This is reasonable if deadlocks occur very rarely and the cost of prevention is high; e.g. only one process ones at a time. It is a trade-off between **_convenience_** (engineering approach) and **_correctness_** (mathematical approach)
 
 Windows and UNIX use this approach for some of the more complex resource relationships they manage.
 
@@ -89,7 +89,7 @@ Attacking the mutual exclusion condition is not feasible in general because some
 
 #### Hold and Wait Condition
 
-Attacking the hold and wait condition requires processes to request resources before starting so that a process never has to wait for what it needs. Issues with this are that
+Attacking the hold and wait condition requires processes to **_request for all resources needed before starting_** so that a process never has to wait for what it needs. Issues with this are that
 
 * we may not know the required resources at the start of the process
 * ties up resources other processes could be using
@@ -126,12 +126,12 @@ In this, we numerically order resources so that they must be accessed in a speci
 
 #### Summary
 
-| Condition         | Approach                      |
-| ---               | ---                           |
-| mutual exclusion  | not feasible                  |
-| hold and wait     | request resources initially   |
-| no pre-emption    | take resources away           |
-| circular wait     | order resources               |
+| Condition         | Approach                                  |
+| ---               | ---                                       |
+| mutual exclusion  | not feasible                              |
+| hold and wait     | allocate all resources needed initially   |
+| no pre-emption    | take resources away (not viable)          |
+| circular wait     | access resources in specific order        |
 
 ### Approach 3: Detection and Recovery
 
@@ -183,12 +183,12 @@ This is not very practical because the operating system will be kept busy storin
 
 We can avoid deadlock only if we have enough information in advanced; that is we need to know the max no. of resources required.
 
-Note: deadlock prevention and avoidance are not the same.  
-Prevention the attacks conditions of deadlock while avoidance comes up with a way of allocating resources so that deadlock does not occur.
+Note: deadlock prevention and avoidance are not the same - prevention the attacks conditions of deadlock while avoidance comes up with a way of allocating resources so that deadlock does not occur.
 
-Here we have graph of two process resource trajectories, where  
-the x axis represents the progress of process A  
-the y-axis represents the progress of process B
+Here we have graph of two process resource trajectories, where
+
+* the x-axis represents the progress of process A
+* the y-axis represents the progress of process B
 
 ![Process trajectories](../imgs/4-45_process-trajectories.png)
 
@@ -221,7 +221,7 @@ In (b) process B requests one more resource. To determine whether we should give
 
 The Banker's algorithm for multiple resources is structured similarly to deadlock detection with multiple resources. If there aren't enough resources, the state becomes unsafe.
 
-\#TODO for image example?
+![banker's algorithm for multiple resources](../imgs/4-53_bankers-multiple-resources.png)
 
 The Banker's algorithm is not commonly used in practice. It is difficult (sometimes impossible) to know in advance the resources a process will require and the number of processes in a dynamic system.
 
