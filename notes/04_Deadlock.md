@@ -165,8 +165,8 @@ The detection algorithm works like this:
 1. Look for an unmarked process _Pi_ in **_C_**, for which the _i_-th row of **_R_** is less than or equal to **_A_**
 2. If found add the _i_-th row of **_C_** to **_A_**, and mark _Pi_.  
 Then go to step 1.
-3. If not such processes exist, terminate.
-Any remaining processes are deadlocked.
+3. If there are no processes found, terminate.  
+Any remaining processes are **_deadlocked_**.
 
 Example: the algorithm terminates with no unmarked processes so there is no deadlock
 
