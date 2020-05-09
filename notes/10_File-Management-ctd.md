@@ -12,7 +12,7 @@ Instead we can provide a framework that separates file system independent and fi
 A **virtual file system (VFS)** provides a single system call interface for many file systems (e.g. UFS, Ext2, XFS, DOS, ISO9660, etc) and transparent handling of network file systems.  
 It also provides a file-based interface to arbitrary device drivers (`/dev`) as well as to kernel data structures (`/proc`)
 
-VFS can be thought of as an indirection layer for system calls (i.e. between the file operations requested by an application and the file system that happens to implement that request).Given that file operation table is set up at file open time, the VFS points to actual handling code for a particular request and further file operations are redirected to those functions.
+VFS can be thought of as an indirection layer for system calls (i.e. between the file operations requested by an application and the file system that happens to implement that request). Given that file operation table is set up at file open time, the VFS points to actual handling code for a particular request and further file operations are redirected to those functions.
 
 The file system independent code deals with VFS and vnodes
 
@@ -74,7 +74,7 @@ Note that most operations are on vnodes. To operate on file names, there is a hi
 
 ``` C
 int vfs_open(char *path, int openflafs, mode_t mode, struct vnode **ret);
-void vfs_closeclose(struct vnode *vn);
+void vfs_close(struct vnode *vn);
 int vfs_readlink(char *path, struct uio *data);
 int vfs_symlink(char *contents, char *path);
 int vfs_mkdir(char *path);
@@ -136,6 +136,8 @@ Each open file has a **file descriptor**. `read`, `write` `lseek` etc use them t
 * file pointer - the current offset in the file. Determines where in the file the next read or write is performed
 * mode - was the file opened as a read-only file etc.
 
+How do we represent file descriptors in relation to vnodes?
+
 **Option 1:** Use vnode numbers as file descriptors and add a file pointer to the vnode.  
 **Problems:** when we concurrently open the same file twice, we should get two separate file descriptors and file pointers, but we don't.
 
@@ -194,7 +196,7 @@ When the cache is full and we need to read another block into memory, we must ch
 
 File data is expected to survive. A strict LRU policy could keep modified critical data in memory forever if it is frequently used.
 
-Generally, cached disk blocks are priorities in terms of how critical they are to file system consistency.  
+Generally, cached disk blocks are prioritised in terms of how critical they are to file system consistency.  
 Directory blocks and inode blocks, if lost can corrupt entire file systems. e.g. imagine losing the root directory. These blocks are usually scheduled for immediate write to disk.  
 Data blocks if lost corrupt only the file that they are associated with. These blocks are only scheduled for write back to disk periodically. In UNIX, `flushd` (flush daemon) flushes all modified blocks to disk every 30 seconds.
 
