@@ -68,10 +68,10 @@ Advantages:
 
 Disadvantages:
 
-* need the maximum file sixe for the file at the time of creation
+* need the maximum file size for the file at the time of creation
 * as many files are deleted, free space becomes divided into many small chunks (external fragmentation)
 
-Examples: ISO 9660 (CDROM FS)
+Examples: ISO 9660 (CD-ROM FS)
 
 ![contiguous allocation](../imgs/9-17_contiguous-allocation.png)
 
@@ -110,7 +110,7 @@ Disadvantages:
 
 #### File Allocation Table (FAT)
 
-The **File Allocation Table (FAT)** method keeps a map of the entire file system in a separate table. A table entry contains the number of the next block of the file. The last block in the file and empty blocks are marked using reserved values.
+The **File Allocation Table (FAT)** method keeps a map of the **_entire_** file system in a separate table. A table entry contains the number (location) of the next block of the file much like a linked list. The last block in the file and empty blocks are marked using reserved values.
 
 The table is stored on the disk and is replicated in memory. This allows random access to be fast (following the in-memory disk)
 
@@ -130,34 +130,33 @@ Note that there are two copies of FAT in case one of them every fails.
 
 ### Inode-based File System Structure
 
-The idea behind an **inode-based** file system structure is to have a separate table (index-node or i-node) for each file. We only keep the table for open files in memory, allowing fast random access. It is the most popular file system structure today.
+The idea behind an **inode-based** file system structure is to have a separate table (index-node or i-node or inode) for each file. We only keep the table for open files in memory, allowing fast random access. It is the most popular file system structure today.
 
 ![inode fs](../imgs/9-25_inode-fs.png)
 
-i-nodes occupy one or several disk areas. In the example below, a portion of the hard disk is reserved for storing i-nodes.
+Inodes occupy one or several disk areas. In the example below, a portion of the hard disk is reserved for storing inodes.
 
-![inode disk occpation](../imgs/9-26_inode-disk-occupation.png)
+![inode disk occupation](../imgs/9-26_inode-disk-occupation.png)
 
-i-nodes  are allocated dynamically, hence free-space management is required for i-nodes.  
-We use fix-sized i-nodes to simplify dynamic allocation. The i-node contains entries for file attributes, references to blocks of where file blocks are located and reserve the last i-node entry for a pointer (a block number) to an extension i-node. The extension i-node will contain block numbers for higher offsets of the file
+Inodes  are allocated dynamically, hence free-space management is required for inodes.  
+We use fix-sized inodes to simplify dynamic allocation. The inode contains entries for file attributes, references to blocks of where file blocks are located and reserve the last inode entry for a pointer (a block number) to an extension inode. The extension inode will contain block numbers for higher offsets of the file
 
-A diagram of i-node entries:
+A diagram of inode entries:
 
 ![free space management](../imgs/9-27_free-space-management1.png)
 
 Free space management can be approached two ways:
 
-1. a linked list of free blocks in free blocks on disk
-2. keeping bitmaps of free blocks and free i-nodes on disks
-
-In approach 1, we'll have a list of all unallocated blocks. Background jobs can re-order the list for better contiguity.  
-We store in i-node entries other free blocks with the last entry pointing to the next block containing a list of free blocks. This does not reduce the disk capacity of free blocks. Only one block of pointers needs to be kept in main memory (that is the head of the list).
+**Approach 1: free block list**  
+We maintain a list of all unallocated/free blocks. Background jobs can re-order the list for better contiguity.  
+We store in inode entries other free blocks with the last entry pointing to the next block containing a list of free blocks. This does not reduce the overall disk capacity. Only one block of pointers needs to be kept in main memory (that is the head of the list).
 
 When we need to use free blocks, we go through entries of free blocks in the head of the free block list. When we reach the final entry, the head of the list becomes the next block containing a free block entries and we can use the current block as a free block.
 
 ![approach 1](../imgs/9-28_free-space-linked-list.png)
 
-In approach 2, individual bits in a bit vector flags used and free blocks.  
+**Approach 2: free space bitmaps**  
+We have a bit vector which uses individual bits to flag blocks which are used and which are free. This will reduce the usable disk capacity  
 A 16GB disk with 512 byte blocks will have a 4MB table.  
 This may be too large to hold in main memory and becomes expensive to search (although optimisations are possible; e.g. a two level table)  
 Concentrating (de)allocation in a portion of the bitmap has the desirable effect of concentrating access. It also becomes simple to find contiguous free space.
@@ -169,7 +168,7 @@ Directories are stored like normal files expect the operating system does not le
 The file system assigns special meaning to the content of these files;
 
 * a directory file is a list of directory entries
-* a directory entry contains file name, attributes and the file i-node number. This maps a human-oriented file-name to a system oriented name
+* a directory entry contains file name, attributes and the file inode number. This maps a human-oriented file-name to a system oriented name
 
 #### Directory Entries
 
@@ -191,7 +190,7 @@ We can located files in a directory by using:
 ![store file attributes](../imgs/9-34_store-file-attr.png)
 
 (a) disk addresses and attributes in a directory entry (e.g. FAT)  
-(b) directory in which each entry just refers to an i-node (e.g. UNIX)
+(b) directory in which each entry just refers to an inode (e.g. UNIX)
 
 ## Trade-off in File System Blocks
 

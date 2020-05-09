@@ -179,7 +179,7 @@ Implementation at user level means
 
 * there is a User-Level Thread Control (TCB), ready queue, blocked queue, and dispatcher.
 * the kernel has no knowledge of the threads and it only sees a single process
-* if a thread blocks waiting for a resource held by another thread inside the same process, its state is saved and the dispatcher switches to another ready thread
+* if a thread blocks waiting for a **_resource held by another thread inside the same process_** (i.e. not a OS-based resource), its state is saved and the dispatcher switches to another ready thread
 * thread management (create, exit, yield, wait) are implemented in a runtime support library
 
 **Advantages**:
