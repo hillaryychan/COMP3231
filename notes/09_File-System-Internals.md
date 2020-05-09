@@ -147,7 +147,7 @@ A diagram of inode entries:
 
 Free space management can be approached two ways:
 
-**Approach 1: free block list**  
+**Approach 1:** free block list  
 We maintain a list of all unallocated/free blocks. Background jobs can re-order the list for better contiguity.  
 We store in inode entries other free blocks with the last entry pointing to the next block containing a list of free blocks. This does not reduce the overall disk capacity. Only one block of pointers needs to be kept in main memory (that is the head of the list).
 
@@ -155,7 +155,7 @@ When we need to use free blocks, we go through entries of free blocks in the hea
 
 ![approach 1](../imgs/9-28_free-space-linked-list.png)
 
-**Approach 2: free space bitmaps**  
+**Approach 2:** free space bitmaps  
 We have a bit vector which uses individual bits to flag blocks which are used and which are free. This will reduce the usable disk capacity  
 A 16GB disk with 512 byte blocks will have a 4MB table.  
 This may be too large to hold in main memory and becomes expensive to search (although optimisations are possible; e.g. a two level table)  
