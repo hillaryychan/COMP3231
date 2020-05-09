@@ -156,7 +156,8 @@ When we need to use free blocks, we go through entries of free blocks in the hea
 ![approach 1](../imgs/9-28_free-space-linked-list.png)
 
 **Approach 2:** free space bitmaps  
-We have a bit vector which uses individual bits to flag blocks which are used and which are free. This will reduce the usable disk capacity  
+We have a bit vector which uses individual bits to flag free and used blocks  
+This will reduce the usable disk capacity  
 A 16GB disk with 512 byte blocks will have a 4MB table.  
 This may be too large to hold in main memory and becomes expensive to search (although optimisations are possible; e.g. a two level table)  
 Concentrating (de)allocation in a portion of the bitmap has the desirable effect of concentrating access. It also becomes simple to find contiguous free space.
