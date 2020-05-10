@@ -34,7 +34,7 @@ Recall that an operating system aims to:
 * maximise memory utilisation
 * maximise CPU utilisation (ignoring battery/power management issues)
 
-We can subdivide memory and run more than one process at one. This is known as multiprogramming or multitasking.
+We can subdivide memory and run more than one process at once. This is known as multiprogramming or multitasking.
 
 ![Modelling Multiprogramming](../imgs/13-10_modelling-multiprogramming.png)
 
@@ -47,19 +47,19 @@ The overview of evolution of simple memory management:
 
 ### Fixed Partitioning
 
-**Approach 1:** divide memory into **fixed equal-sized** partitions. Any process smaller than or equal to the partition size can be loaded into any partition. Partitions are free or busy.
+**Approach 1:** divide memory into **_fixed equal-sized_** partitions. Any process smaller than or equal to the partition size can be loaded into any partition. Partitions are free or busy.
 
 ![Fixed equal partition](../imgs/13-13_fixed-partition.png)
 
 Any unused space in the partition is wasted (internal fragmentation). Processes smaller than main memory but larger than a partition cannot run.
 
-**Approach 2:** fixed, variable-sized partitions. We divide memory at boot time into a selection of different sized partitions. We can base the sizes on expected workloads. Each partition has a queue. We place a process in the queue for the smallest partition that it fits in. Processes then wait for when the assigned partition is empty to start.
+**Approach 2:** **_fixed, variable-sized_** partitions. We divide memory at boot time into a selection of different sized partitions. We can base the sizes on expected workloads. Each partition has a queue. We place a process in the queue for the smallest partition that it fits in. Processes then wait for when the assigned partition is empty to start.
 
 ![Fixed variable partition](../imgs/13-15_fixed-variable-partition.png)
 
 An issue here is that some partitions may be idle; we may have small jobs available and queued but a large partition free. Workloads are unpredictable and may not be efficiently used
 
-**Approach 3:** fixed variable-sized partitions with a single queue. We have a single queue where we search for a partition that fits the job. This means small jobs may be allocated large partitions if necessary. However this increases internal memory fragmentation.
+**Approach 3:** **_fixed variable-sized_** partitions **_with a single queue_**. We have a single queue where we search for a partition that fits the job. This means small jobs may be allocated large partitions if necessary. However this increases internal memory fragmentation.
 
 ![Fixed variable partition with single queue](../imgs/13-17_fixed-var-part-single-queue.png)
 
@@ -69,7 +69,7 @@ This approach is used on IBM System 360 operating system (OS/MFT) announced in 6
 
 ### Dynamic Partitioning
 
-In dynamic partitioning, partitions are of variable length and are allocated **on-demand** from ranges of free memory. A process is allocated exactly what it needs and it is assumed a process knows what it needs.
+In dynamic partitioning, partitions are of **_variable length_** and are allocated **_on-demand_** from ranges of free memory. A process is allocated exactly what it needs and it is assumed a process knows what it needs.
 
 ![Effect of dynamic partitioning](../imgs/13-19_effect-of-dynamic-part.jpg)
 
@@ -131,9 +131,9 @@ To deal with this we have **logical addresses** refer to locations within the pr
 
 The logical addresses can be bound to physical memory at:
 
-* **compile/link time** - the compiler/linker binds the address and must know the "run" location at compile time. We need to recompile if the location changes
-* **load time** - the compiler generates _relocatable_ code. The loader binds the address at load time
-* **run time** - logical compile-time addresses are translated to physical addresses by _special hardware_
+* **compile/link time** - the compiler/linker binds the address and must know the "run" location at compile time (in other words the executable contains the corresponding physical addresses for the process). This means we can only **_run one copy_** of the process and it can only **_run at one_** location. We need to recompile if the location changes
+* **load time** - the compiler generates **_relocatable_** code. Addresses are annotated and the loader binds the address to the correct location at load time. This slows start up and increases the executable file size
+* **run time** - logical compile-time addresses are translated to physical addresses by _special hardware_. The cost of translating every memory reference is high
 
 ##### Hardware Support for Runtime Binding and Protection
 
@@ -141,13 +141,13 @@ For process B to run using logical addresses, process B expects to access addres
 
 ![using logical addresses](../imgs/13-38_logical-addr.jpg)
 
-To deal with this we have **base and limit registers** (also called **base and bound registers** and **relocation and limit registers**. Base and limit registers restrict and relocate the currently active process. Base and limit registers must be changes at load time, relocation (compaction time) or on a context switch.
+To deal with this we have **base and limit registers** (also called **base and bound registers** and **relocation and limit registers**. Base and limit registers restrict and relocate the currently active process. Base and limit registers must be changed at load time, relocation (compaction time) or on a context switch.
 
 ![base and limit registers](../imgs/13-41_base-and-limit-registers.jpg)
 
 Pros include:
 
-* it supports protected multi-processing/multi-tasking
+* supports protected multi-processing/multi-tasking
 
 Cons include:
 
@@ -169,34 +169,3 @@ A major part of swap time is transfer time; the total transfer time is directly 
 A schematic view of swapping:
 
 ![schematic view of swappng](../imgs/13-45_swapping-schematic-view.png)
-
-## Virtual Memory
-
-**Virtual memory** was developed to address the issues identified with the simple schemes covered so far. There are two variants; paging and segmentation. Paging is now the dominant one of the two. Some architectures support hybrids of the two schemes; e.g. Intel 1A-32 (32-bit x86)
-
-### Paging
-
-In paging we partition physical memory into small equal sized chunks called **_frames_**. We divide each process' virtual (logical) address space into same sized chunks called **_pages_**. Virtual memory addresses consist of a _page number_ and _offset within the page_.
-
-The operating system maintains a **page table**, which contains the frame location for each page. It is used by _hardware_ to translate each virtual address to a physical address. The relation between virtual addresses and physical memory addresses is given by the page table.
-
-In paging the process' physical memory does **not** have to be contiguous.
-
-![page table](../imgs/13-48_page-table.png)
-
-The assignment of process pages to free frames:
-
-![page assignment](../imgs/13-49_page-assignment.jpg)
-
-Paging has no external fragmentation, although it will have a small amount of internal fragmentation (especially for the last page). It allows sharing by _mapping_ several pages to the same frame. Paging abstracts physical organisation since the programmer only deals with virtual addresses. There is minimal support for logical operations since each unit if one or more pages.
-
-### Memory Management Unit (MMU)
-
-The **Memory Management Unit (MMU)** is also called **Translations Look-aside Buffer (TLB)**
-It is connected to the CPU, which sends virtual addresses to the MMU. The MMU translates the given logical addresses to physical address in memory.
-
-![MMU Location](../imgs/13-52_MMU-loc.png)
-
-MMU Operation:
-
-![MMU operation](../imgs/13-53_MMU-operation.png)

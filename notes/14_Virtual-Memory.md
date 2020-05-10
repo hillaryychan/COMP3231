@@ -1,5 +1,36 @@
 # Virtual Memory
 
+## Introduction
+
+**Virtual memory** was developed to address the issues identified with the simple schemes covered so far. There are two variants; paging and segmentation. Paging is now the dominant one of the two. Some architectures support hybrids of the two schemes; e.g. Intel 1A-32 (32-bit x86)
+
+### Paging
+
+In paging we partition physical memory into small equal sized chunks called **_frames_**. We divide each process' virtual (logical) address space into same sized chunks called **_pages_**. Virtual memory addresses consist of a _page number_ and _offset within the page_.
+
+The operating system maintains a **page table**, which contains the frame location for each page. It is used by _hardware_ to translate each virtual address to a physical address. The relation between virtual addresses and physical memory addresses is given by the page table.
+
+In paging the process' physical memory does **not** have to be contiguous.
+
+![page table](../imgs/13-48_page-table.png)
+
+The assignment of process pages to free frames:
+
+![page assignment](../imgs/13-49_page-assignment.jpg)
+
+Paging has no external fragmentation, although it will have a small amount of internal fragmentation (especially for the last page). It allows sharing by _mapping_ several pages to the same frame. Paging abstracts physical organisation since the programmer only deals with virtual addresses. There is minimal support for logical operations since each unit if one or more pages.
+
+### Memory Management Unit (MMU)
+
+The **Memory Management Unit (MMU)** is also called **Translations Look-aside Buffer (TLB)**
+It is connected to the CPU, which sends virtual addresses to the MMU. The MMU translates the given logical addresses to physical address in memory.
+
+![MMU Location](../imgs/13-52_MMU-loc.png)
+
+MMU Operation:
+
+![MMU operation](../imgs/13-53_MMU-operation.png)
+
 ## Overview
 
 **Virtual memory** is divided into equal sized **_pages_**.  
