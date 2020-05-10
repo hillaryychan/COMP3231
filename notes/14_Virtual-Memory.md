@@ -31,6 +31,8 @@ MMU Operation:
 
 ![MMU operation](../imgs/13-53_MMU-operation.png)
 
+More information about the MMU will be discussed [later](#Translation-Look-aside-Buffer)
+
 ## Overview
 
 **Virtual memory** is divided into equal sized **_pages_**.  
