@@ -16,7 +16,7 @@
         1. [ext2 File System](https://github.com/hillaryychan/COMP3231/blob/master/notes/11_Case-Study:ext2.md)
         2. [ext3 File System](https://github.com/hillaryychan/COMP3231/blob/master/notes/12_Case-Study:ext3.md)
 5. Memory and Virtual Memory Management
-    1. [Memory Management](https://github.com/hillaryychan/COMP3231/blob/master/notes/13_Memory-Management.md) (memory allocation, swapping, virtual memory overview)
+    1. [Memory Management](https://github.com/hillaryychan/COMP3231/blob/master/notes/13_Memory-Management.md) (memory allocation, swapping)
     2. [Virtual Memory I](https://github.com/hillaryychan/COMP3231/blob/master/notes/14_Virtual-Memory.md) (sharing memory, page table structures, implementation issues, translation look-aside buffers)
     3. [Virtual Memory II](https://github.com/hillaryychan/COMP3231/blob/master/notes/15_Virtual-Memory-ctd.md) (MIPS TLB handling, demand paging/segmentation, locality, working sets, thrashing, virtual memory policies)
 6. [Multiprocessors](https://github.com/hillaryychan/COMP3231/blob/master/notes/16_Multiprocessors.md) (bus based UMA,OS for multiprocessors, multiprocessor synchronisation)
