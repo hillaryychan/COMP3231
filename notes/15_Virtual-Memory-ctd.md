@@ -109,7 +109,7 @@ EntryHi     EntryLo
     3. Otherwise, the mapping is **valid**
 4. If the mapping is valid, the physical address is the first 5 digits of `EntryLo` (the frame number) and the last 3 digits of your virtual address (the offset)
 
-The `c0_Index` register is used as an index to TLB entries. Single TLB entries are manipulated/viewed through `EntryHi` and `EntryLo` registers. The index register specifies which TLb entry to change/view
+The `c0_Index` register is used as an index to TLB entries. Single TLB entries are manipulated/viewed through `EntryHi` and `EntryLo` registers. The index register specifies which TLB entry to change/view
 
 Special TLB management instructions:
 
@@ -146,7 +146,7 @@ The TLB entry (i.e. `c0_EntryLo`) can be (theoretically) created on the fly or s
 **OS/161 Refill handling**:  
 After switching to the kernel stack, it simply calls the common exception handler
 
-* stacks all registes
+* stacks all registers
 * can (and does) call `C` code
 * unoptimised
 * goal is ease of kernel programming, not efficiency
@@ -155,7 +155,7 @@ It does not have a page table. It uses the 64 TLB entries and then panics when i
 
 ## Demand Paging/Segmentation
 
-With virtual memory, only parts of the program image need to be resident in memory for execution. We can transfer presently unused page/segments to disk and then reload non-resident pages/segments on **demand**
+With virtual memory, only parts of the program image need to be resident in memory for execution. We can transfer presently unused pages/segments to disk and then reload non-resident pages/segments on **demand**
 
 A **reload** is triggered by a page or segment fault. The faulting process is blocked and another is scheduled. When the page/segment is resident, the faulting process is restarted.  
 This may require freeing up memory first, where we replace a current resident page/segment (the replacement "victim"). If the victim is unmodified ("clean") we can simply discard it. This is the reason for maintaining a "dirty" bit in the page table.
@@ -208,7 +208,7 @@ In `gcc`'s memory reference pattern, the working set is the page numbers loaded 
 
 CPU utilisation tends to increase with the degree of multiprogramming (the number of processes in the system). _Higher degrees of multiprogramming means less memory available per process_.
 
-Some process' working sets may no longer fit in RAM. This implies and increasing page fault rate. Eventually many processes have insufficient memory and can't find a runnable process. This results in decreased CPU utlisation, and the system being I/O limited. This is known as **thrashing**
+Some process' working sets may no longer fit in RAM. This implies and increasing page fault rate. Eventually many processes have insufficient memory and can't find a runnable process. This results in decreased CPU utilisation, and the system being I/O limited. This is known as **thrashing**
 
 ![thrashing](../imgs/15-31_thrashing.png)
 
@@ -237,7 +237,7 @@ Operation and performance of VM systems is dependent on a number of policies:
 
 Increasing page size:  
 ✓ decreases number of pages - reduces size of page tables  
-✓ reduces TLB coverage - reduces number of TLB misses  
+✓ increases TLB coverage - reduces number of TLB misses  
 ✓ increases swapping I/O throughput - small I/O are dominated by seek/rotation delays  
 x increases internal fragmentation - reduces the adaptability to working set size  
 x increases page fault latency - need to read more from disk before restarting process
@@ -274,7 +274,7 @@ Constraints:
 * I/O buffers
 * performance-critical user-pages (e.g. for DBMS)
 
-For the above the fram table has a **lock** (or **pinned**) bit
+For the above the frame table has a **lock** (or **pinned**) bit
 
 #### _Optimal_ Replacement Policy
 
@@ -322,7 +322,7 @@ Note that there are other algorithms (Working Set, WSclock, Ageing, NFU, NRU)
 
 Resident set size concerns how many frames each process should have.
 
-We can have a **fixed allocation**, which gives a process a fixed number of pages within which to execute. This isolates process memory usage from each other. When a page fault occurs, one of the pages of that process must be replaced. Achieving high utilisation is an issue here sine some processes have high fault rate while others use their full allocation.
+We can have a **fixed allocation**, which gives a process a fixed number of pages within which to execute. This isolates process memory usage from each other. When a page fault occurs, one of the pages of that process must be replaced. Achieving high utilisation is an issue here since some processes have high fault rate while others use their full allocation.
 
 We can also have **variable allocation**, where the number of pages allocated to a process varies over the lifetime of the process.  
 

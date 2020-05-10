@@ -147,7 +147,7 @@ Instead of accessing the page table via a single page number, we split the page 
 
 ### Inverted Page Table
 
-An **inverted page table (IPT)** has an array of page numbers indexed by frame numbers (it's frame table).
+An **inverted page table (IPT)** has an array of page numbers indexed by frame numbers (it's a frame table).
 
 The algorithm:
 
