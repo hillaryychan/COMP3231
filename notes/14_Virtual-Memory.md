@@ -63,7 +63,11 @@ If we access non-resident memory, we will get a **page fault**. This occurs when
 Broadly there are two standard page fault types:
 
 * **illegal address** (protection error) - signals or kills the process
-* **page not resident** - will get an empty frame, loads the page, updates the page (translation) table (enter frame#, set valid bit, etc.), restart the faulting instruction
+* **page not resident** - will
+    1. get an empty frame
+    2. load the page
+    3. update the page (translation) table (enter frame#, set valid bit, etc.)
+    4. restart the faulting instruction
 
 A page table for resident parts of the address space:
 
