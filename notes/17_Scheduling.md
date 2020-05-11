@@ -122,8 +122,8 @@ In the **traditional UNIX scheduler**, is a two-level scheduler. The high-level 
 
 ![traditional unix scheduler](../imgs/17-48_trad-unix-scheduler.png)
 
-the highest priority (lower number) is scheduled.  
-Priorities are **_re-calculated_** once per second, and re-inserted into appropriate ques. This avoids starvation of low priority threads and penalises CPU-bound threads
+The highest priority (lower number) is scheduled.  
+Priorities are **_re-calculated_** once per second, and re-inserted into appropriate queues. This avoids starvation of low priority threads and penalises CPU-bound threads
 
 `priority = CPU_usage + nice + base`
 
@@ -137,9 +137,9 @@ Given X processes (or threads) and Y CPUs, we need a way to allocated the proces
 
 ### Single Shared Ready Queue
 
-One approach is to have a **single shared ready queue**. When a CPU goes idle, it takes the highest priority process from the shared ready queue. Note that we need to synchronise the data structure that is keeping our prioritised round robin queue as it CPU will need to "compete" to get the next task.
+One approach is to have a **single shared ready queue**. When a CPU goes idle, it takes the highest priority process from the shared ready queue. Note that we need to synchronise the data structure that is keeping our prioritised round robin queue as CPUs will "compete" to get the next task.
 
-![shareds ready queue](../imgs/17-51_shared-ready-queu.png)
+![shared ready queue](../imgs/17-51_shared-ready-queu.png)
 
 **Pros**:
 
