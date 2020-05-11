@@ -1,10 +1,10 @@
 # Multiprocessors
 
-We will look at **shared-memory multiprocessors** (i.e when multiple processors share the same memory. A single CPU can only go so fast. If we use more than one CPU, it is possible to improve performance. This is based on the assumption that workload can be panellised and is not I/O bound or memory bound.
+We will look at **shared-memory multiprocessors** (i.e when multiple processors share the same memory. A single CPU can only go so fast. If we use more than one CPU, it is possible to improve performance. This is based on the assumption that workload can be parallelised and is not I/O bound or memory bound.
 
 Recall **Amdahl's Law**, where given a portion _P_ of a program that can be made parallel, and the remaining portion _(1-P)_, sped up by using _N_ processors
 
-The speedup = `1/((1-P)+P/N)`
+The speed-up = `1/((1-P)+P/N)`
 
 Given a program, which runs in serial 50% of the time and in parallel for the other 50%, If we use 2 processor the speed up becomes `1/(0.5 +0.5/2) = 1.33...`
 
@@ -25,7 +25,7 @@ We will be focusing on UMA multiprocessors
 
 A **Bus Based UMA** is the simplest multiprocessor, where more than one processor is on a single bus connected to memory. The bus bandwidth becomes a bottle neck with more than just a few CPUs.
 
-Each processor has a cache to reduce its need to access to memory. The hope is tha most accesses are to the local cache. Even so, the bus bandwidth still becomes a bottle neck with many CPUs.
+Each processor has a cache to reduce its need to access to memory. The hope is that most accesses are to the local cache. Even so, the bus bandwidth still becomes a bottle neck with many CPUs.
 
 ![bus based uma](../imgs/16-9_bus-based-uma.jpg)
 
@@ -39,10 +39,10 @@ With only a single shared bus, scalability can be limited by the bus bandwidth o
 
 Another bus architecture: multi-core processor
 
-![mulit core processor](../imgs/16-12_multicore-processor.png)
+![multi core processor](../imgs/16-12_multicore-processor.png)
 
 In summary, multiprocessors can increase computation power beyond that available from a single CPU. It shares resources such as disk and memory.  
-However, it works under the assumption that parallelisable workload is effective and not I.O bound. The shared buses (bus bandwidth) limits scalability, but can be reduced via hardware design, and by carefully crafting software behaviour. E.g. good cache locality together with limited sharing where possible
+However, it works under the assumption that parallelisable workload is effective and not I/O bound. The shared buses (bus bandwidth) limits scalability, but can be reduced via hardware design, and by carefully crafting software behaviour. E.g. good cache locality together with limited sharing where possible
 
 ## Operating Systems for Multiprocessors
 
@@ -56,14 +56,14 @@ This was used in early multiprocessor systems to "get them going". It has the fo
 
 * **simple** to implement
 * **avoids** CPU-based **concurrency issues** by not sharing
-* **scales** 0 no shared serial sections
+* **scales** - no shared serial sections
 
 It is a modern analogy to virtualisation in the cloud
 
 It does that have following issues though:
 
 * each processor has its own scheduling queue; we can have one processor overloaded and the rest idle
-* each processor has its own memory partition; he can have one processor thrashing, and the others free with memory; there is no way to move free memory from one os to another
+* each processor has its own memory partition; he can have one processor thrashing, and the others free with memory; there is no way to move free memory from one OS to another
 
 ### Symmetric Multiprocessors
 
@@ -78,7 +78,7 @@ Only one CPU can be in the kernel at any time. The "big lock" becomes a bottlene
 
 **Solution 2**: identify large independent parts of the kernel and make each of them their own critical section  
 This allows for more parallelism in the kernel.  
-It is difficult to implement since the code is mostly similar to uniprocessor code. The hard part is identifying independent parts that don't interfere with each other (recall the [spaghetti monster](https://github.com/hillaryychan/COMP3231/blob/master/imgs/1-22_monolithic-os-structures.jpg) or inter-dependencies between OS subsystems)
+It is difficult to implement since the code is mostly similar to uniprocessor code. The hard part is identifying independent parts that don't interfere with each other (recall the [spaghetti monster](https://github.com/hillaryychan/COMP3231/blob/master/imgs/1-22_monolithic-os-structures.jpg) of inter-dependencies between OS subsystems)
 
 Example: associate a mutex with independent parts of the kernel. Some kernel activities require more than one part of the kernel. This means we will need to acquire more than one mutex, which is _great_ opportunity to deadlock.  
 Overall, it results in a potentially complex lock ordering scheme that must be adhered to.
