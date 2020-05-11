@@ -6,7 +6,7 @@
 
 ### Paging
 
-In paging we partition physical memory into small equal sized chunks called **_frames_**. We divide each process' virtual (logical) address space into same sized chunks called **_pages_**. Virtual memory addresses consist of a _page number_ and _offset within the page_.
+In paging we partition physical memory into small equal sized chunks called ***frames***. We divide each process' virtual (logical) address space into same sized chunks called ***pages***. Virtual memory addresses consist of a _page number_ and _offset within the page_.
 
 The operating system maintains a **page table**, which contains the frame location for each page. It is used by _hardware_ to translate each virtual address to a physical address. The relation between virtual addresses and physical memory addresses is given by the page table.
 
@@ -36,7 +36,7 @@ More information about the MMU will be discussed [later](#Translation-Look-aside
 ## Overview
 
 **Virtual memory** is divided into equal sized **_pages_**.  
-A **_mapping_** is a translation between a page and a frame, and a page and null. Mappings are defined at runtime, although they can change.  
+A ***mapping*** is a translation between a page and a frame, and a page and null. Mappings are defined at runtime, although they can change.  
 The address space can have holes.  
 The process does not have to be contiguous in physical memory
 
