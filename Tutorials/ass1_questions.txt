@@ -1,0 +1,58 @@
+Thread Questions
+
+Q1. What happens to a thread when it exits (i.e., calls thread_exit())? What about when it sleeps?
+
+When a thread exits, it ensures the stack isn't mangled, removes its virtual memory space and destroys it, decremetnst the counter of whatever vnode it may be pointing at, puts itself into a zombie state, S_ZOMB, and preps itself to panic it it ever runs again before it dies.
+
+When a thread sleeps, it makes sure it's not in a an interrupt handler, yields control to the next thread, enters the S_SLEEP state, and only starts taking control once more when wakeup() is called on its address.
+
+Q2. What function(s) handle(s) a context switch?
+
+There are two functions that handle context switch; 
+* mi_switch() in thread.c - a high level, machine-independent context switch function
+* md_switch() in pcb.c - a machine-independent code taht acutally des the context switch
+
+Q3. How many thread states are there? What are they?
+
+4 states:
+* S_RUN
+* S_READY
+* S_SLEEP
+* S_ZOMB
+
+They are defined in kern/thread/thread.c
+
+Q4. What does it mean to turn interrupts off? How is this accomplished? Why is it important to turn off interrupts in the thread subsystem code?
+
+If interrupts are turned off, then even if an interrupt is signlaed, the handler is not called until interrupts are turned back on. 
+
+Interrupts are turned off using the function splhigh() for set priority level high and are turned back on using spl0() for set priority level zero. The priority level can also be set to intermediate levels using splx()
+
+Turning off interrupts for thread operations is necessary to ensure that these operaions complete successfully and aren't broken mid-execution.
+
+Q5. What happens when a thread wakes up another thread? How does a sleeping thread get to run again?
+
+It removes the sleeping thread from the queue and called make_runnable() on the thread, which currently adds it to the end of the runqueue. 
+
+The thread gets to run again when mi_switch is called, and that thread is returned by the scheduler.
+
+Scheduler Questions
+
+Q6. What function is responsible for choosing the next thread to run?
+
+struct thread *scheduler(void)
+
+Q7. How does that function pick the next thread?
+
+It uses a round-robin run queue that schedules each thread in the queue in equal time-slice without priorities.
+
+Q8. What role does the hardware timer play in scheduling? What hardware independent function is called on a timer interrupt?
+
+The interrupt handler for hardware timer calls hardclock, defined in src/kern/thread/hardclock.c. The method hardclock finishes by calling thread_yield everytime it is run, forcing a context switch.
+
+Synchronisation Questions
+
+Q9. What is a wait channel? Describe how wchan_sleep() and wchan_wakeone() are used to implement semaphores.
+Q10. Why does the lock API in OS/161 provide lock_do_i_hold(), but not lock_get_holder()?
+
+
