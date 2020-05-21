@@ -4,13 +4,13 @@ We will look at **shared-memory multiprocessors** (i.e when multiple processors 
 
 Recall **Amdahl's Law**, where given a portion _P_ of a program that can be made parallel, and the remaining portion _(1-P)_, sped up by using _N_ processors
 
-The speed-up = `1/((1-P)+P/N)`
+The speedup is ![\frac{1}{(1-p)+\frac{P}{N}}](https://render.githubusercontent.com/render/math?math=%5Cfrac%7B1%7D%7B(1-p)%2B%5Cfrac%7BP%7D%7BN%7D%7D)
 
-Given a program, which runs in serial 50% of the time and in parallel for the other 50%, If we use 2 processor the speed up becomes `1/(0.5 +0.5/2) = 1.33...`
+Given a program, which runs in serial 50% of the time and in parallel for the other 50%, If we use 2 processor the speed up becomes ![\frac{1}{0.5+\frac{0.5}{2}}=1.33...](https://render.githubusercontent.com/render/math?math=%5Cfrac%7B1%7D%7B0.5%2B%5Cfrac%7B0.5%7D%7B2%7D%7D%3D1.33...)
 
 ![amdahl1](../imgs/16-5_amdahl1.png)
 
-If the number of processors tends towards infinity, the speed up becomes `1/(0.5 + 0) = 2`
+If the number of processors tends towards infinity, the speed up becomes ![\frac{1}{0.5+0}=2](https://render.githubusercontent.com/render/math?math=%5Cfrac%7B1%7D%7B0.5%2B0%7D%3D2)
 
 ![amdahl2](../imgs/16-6_amdahl2.png)
 
